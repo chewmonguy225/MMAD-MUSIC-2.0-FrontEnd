@@ -1,0 +1,8 @@
+.artist-list {
+    display: flex;
+    flex-wrap: wrap;  /* Ensures they wrap to the next line if needed */
+    gap: 16px;        /* Adds space between artists */
+    justify-content: flex-start; /* Aligns items from left to right */
+    padding: 16px 0;
+    overflow-x: auto;  /* Allows horizontal scrolling if needed */
+}

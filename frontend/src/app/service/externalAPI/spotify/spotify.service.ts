@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Artist } from '../../../model/item/artist.type';
+import { Album } from '../../../model/item/album.type';
 import { Item } from '../../../model/item/item.type';
 import { ExternalAPIService } from '../external-api.service';
 
@@ -22,5 +23,10 @@ export class SpotifyService extends ExternalAPIService {
   // The searchArtist method now correctly forms the URL without duplicating the base URL
   override searchArtist(artistName: string): Observable<Artist[]> {
     return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${artistName}`);
+  }
+
+  // The searchArtist method now correctly forms the URL without duplicating the base URL
+  override searchAlbum(albumName: string): Observable<Album[]> {
+    return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${albumName}`);
   }
 }

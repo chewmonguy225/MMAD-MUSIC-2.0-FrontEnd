@@ -17,8 +17,11 @@ import { ArtistService } from '../../service/item/artist/artist.service';
 
 export class SearchBarComponent {
   searchQuery: string = '';  // Variable to hold the search query
-  results: Item[] | null = null;  // Variable to store the result
+  results: Item[] = [];  // Variable to store the result
+  displayedItems: Item[] = [];  //items being shown
   item: Item | null = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
   
   constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService) {
   }
@@ -33,9 +36,14 @@ export class SearchBarComponent {
     if (this.searchQuery.trim() !== '') {
       this.externalAPIservice.searchArtist(this.searchQuery).subscribe({
         next: (artists: Artist[]) => {
-          this.item = this.artistService.createArtist(artists[0])
-          console.log(this.item);
-          console.log(typeof this.item);
+          if (artists.length > 0) {
+            this.results = artists.map(artist => this.artistService.createArtist(artist))
+            this.currentPage = 1; // Reset to the first page
+            this.updateDisplayedItems();
+            console.log(this.results);
+          } else {
+            this.results = []; // No results found
+          }
         },
         error: (err) => {
           console.error('Error fetching artists:', err);
@@ -44,4 +52,30 @@ export class SearchBarComponent {
       });
     }
   }
+
+
+  updateDisplayedItems(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.displayedItems = this.results.slice(startIndex, endIndex);
+  }
+
+  nextPage(): void {
+    if (this.currentPage * this.itemsPerPage < this.results.length) {
+      this.currentPage++;
+      this.updateDisplayedItems();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateDisplayedItems();
+    }
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.results.length / this.itemsPerPage);
+  }
+  
 }

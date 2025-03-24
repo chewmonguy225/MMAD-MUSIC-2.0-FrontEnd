@@ -3,5 +3,24 @@
     <input type="text" [value]="searchQuery" (input)="onSearchInput($event)" placeholder="Search for an artist..." />
     <button (click)="searchArtist()">Search</button>
 
-    <app-artist *ngIf="item" [item]="item"></app-artist>
 </div>
+
+<div *ngIf="displayedItems.length > 0; else noResults">
+    <div class="artist-list">
+        <app-artist *ngFor="let item of displayedItems" [item]="item"></app-artist>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ getTotalPages() }}</span>
+        <button type="button" (click)="nextPage()" [disabled]="currentPage * itemsPerPage >= results.length">Next</button>
+    </div>
+</div>
+
+<!-- No Results Template -->
+<ng-template #noResults>
+    <div *ngIf="results === null">
+        No artists found. Try another search.
+    </div>
+</ng-template>
