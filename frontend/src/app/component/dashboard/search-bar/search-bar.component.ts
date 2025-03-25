@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Artist } from '../../model/item/artist.type';
-import { Item } from '../../model/item/item.type';
-import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
-import { ItemComponent } from '../item/item.component';
-import { ArtistComponent } from '../item/artist/artist.component';
-import { ArtistService } from '../../service/item/artist/artist.service';
+import { Artist } from '../../../model/item/artist.type';
+import { Item } from '../../../model/item/item.type';
+import { SpotifyService } from '../../../service/externalAPI/spotify/spotify.service';
+import { ItemComponent } from '../../item/item.component';
+import { ArtistComponent } from '../../item/artist/artist.component';
+import { ArtistService } from '../../../service/item/artist/artist.service';
 
 
 @Component({
   selector: 'app-search-bar',
+  standalone: true,
   imports: [ArtistComponent, CommonModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
