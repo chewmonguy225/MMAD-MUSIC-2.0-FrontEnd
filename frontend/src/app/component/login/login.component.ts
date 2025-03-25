@@ -1,15 +1,16 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../service/user/user.service';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -20,6 +21,7 @@ export class LoginComponent {
   userService = inject(UserService);
 
   isLoginView: boolean = false;
+  errorMessage: string = '';
 
   registerObj: any = {
     'username': '',
@@ -33,6 +35,11 @@ export class LoginComponent {
 
 
   onRegister() {
+
+    if(!this.registerObj.username || !this.registerObj.password) {
+      this.errorMessage = 'Please fill out all required fields.';
+      return;
+    }
    
     this.userService.register(this.registerObj).subscribe((res:any) => {
       if(res && res.username == this.registerObj.username) {
@@ -41,7 +48,7 @@ export class LoginComponent {
         this.isLoginView = true;
       }
       else {
-        alert();
+        alert("registration failure");
       }
     });
 
@@ -49,6 +56,11 @@ export class LoginComponent {
 
 
   onLogin() {
+
+    if (!this.loginObj.username || !this.loginObj.password) {
+      this.errorMessage = 'Please fill out all required fields.';
+      return;
+    }
 
     this.userService.login(this.loginObj).subscribe((res:any) => {
       if(res && res.username == this.loginObj.username) {
@@ -60,6 +72,12 @@ export class LoginComponent {
       }
     });
 
+  }
+
+
+  switchView(isLogin: boolean) {
+    this.isLoginView = isLogin;
+    this.errorMessage = '';
   }
 
 

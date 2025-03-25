@@ -11,3 +11,9 @@
     height: 100%;
     }
     }
+
+.error-message {
+  color: red;
+  font-size: 0.875rem; /* Smaller font size */
+  margin-bottom: 1rem; /* Margin below the error message */
+}
