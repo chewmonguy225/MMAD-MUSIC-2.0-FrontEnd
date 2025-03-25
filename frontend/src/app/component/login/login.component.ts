@@ -17,26 +17,27 @@ import { UserService } from '../../service/user/user.service';
 export class LoginComponent {
 
   router = inject(Router);
-  http = inject(HttpClient);
   userService = inject(UserService);
 
   isLoginView: boolean = false;
 
   registerObj: any = {
-    username: '',
-    password: ''
+    'username': '',
+    'password': ''
   }
 
   loginObj: any = {
-    username: '',
-    password: ''
+    'username': '',
+    'password': ''
   }
+
 
   onRegister() {
    
     this.userService.register(this.registerObj).subscribe((res:any) => {
       if(res && res.username == this.registerObj.username) {
         alert("Registration success");
+        localStorage.setItem('isLoggedIn', 'true');
         this.isLoginView = true;
       }
       else {
@@ -59,6 +60,11 @@ export class LoginComponent {
       }
     });
 
+  }
+
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem('isLoggedIn') == 'true';
   }
   
 }
