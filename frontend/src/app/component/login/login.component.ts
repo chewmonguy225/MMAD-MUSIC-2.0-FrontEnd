@@ -24,31 +24,33 @@ export class LoginComponent {
   errorMessage: string = '';
 
   registerObj: any = {
-    'username': '',
-    'password': ''
+    username: '',
+    password: ''
   }
 
   loginObj: any = {
-    'username': '',
-    'password': ''
+    username: '',
+    password: ''
   }
 
 
   onRegister() {
+
+    this.errorMessage = '';
 
     if(!this.registerObj.username || !this.registerObj.password) {
       this.errorMessage = 'Please fill out all required fields.';
       return;
     }
    
-    this.userService.register(this.registerObj).subscribe((res:any) => {
-      if(res && res.username == this.registerObj.username) {
-        alert("Registration success");
-        localStorage.setItem('isLoggedIn', 'true');
-        this.isLoginView = true;
-      }
-      else {
-        alert("registration failure");
+    this.userService.register(this.registerObj).subscribe({
+      next: (res:any) => {
+          alert("Registration success");
+          this.isLoginView = true;
+      },
+      error: (err) => {
+        console.error("Registration error:", err.message);
+        this.errorMessage = 'Username already taken. Please choose a different one.';
       }
     });
 
@@ -57,18 +59,22 @@ export class LoginComponent {
 
   onLogin() {
 
+    this.errorMessage = '';
+
     if (!this.loginObj.username || !this.loginObj.password) {
       this.errorMessage = 'Please fill out all required fields.';
       return;
     }
 
-    this.userService.login(this.loginObj).subscribe((res:any) => {
-      if(res && res.username == this.loginObj.username) {
+    this.userService.login(this.loginObj).subscribe({
+      next: (res:any) => {
         alert("Login success");
+        localStorage.setItem('isLoggedIn', 'true');
         this.router.navigateByUrl('dashboard')
-      }
-      else {
-        alert("Credentials do not match.");
+      },
+      error: (err) => {
+        console.error("Login error:", err.message);
+        this.errorMessage = 'Login failed. Please check your credentials and try again.';
       }
     });
 
