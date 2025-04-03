@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Artist } from '../../model/item/artist.type';
+import { Album } from '../../model/item/album.type';
 import { Item } from '../../model/item/item.type';
 import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
 import { ItemComponent } from '../item/item.component';
 import { ArtistComponent } from '../item/artist/artist.component';
 import { ArtistService } from '../../service/item/artist/artist.service';
+import { AlbumService } from '../../service/item/album/album.service';
+import { SongService } from '../../service/item/song/song.service';
 
 
 @Component({
@@ -23,7 +26,7 @@ export class SearchBarComponent {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   
-  constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService) {
+  constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService, private albumService: AlbumService) {
   }
 
   onSearchInput(event: Event): void {
@@ -37,6 +40,7 @@ export class SearchBarComponent {
       this.externalAPIservice.searchArtist(this.searchQuery).subscribe({
         next: (artists: Artist[]) => {
           if (artists.length > 0) {
+             console.log("here");
             this.results = artists.map(artist => this.artistService.createArtist(artist))
             this.currentPage = 1; // Reset to the first page
             this.updateDisplayedItems();
@@ -47,6 +51,50 @@ export class SearchBarComponent {
         },
         error: (err) => {
           console.error('Error fetching artists:', err);
+          this.item = null;
+        }
+      });
+    }
+  }
+
+  searchAlbum(): void {
+    console.log("here");
+    if (this.searchQuery.trim() !== '') {
+      this.externalAPIservice.searchAlbum(this.searchQuery).subscribe({
+        next: (albums: Album[]) => {
+          if (albums.length > 0) {
+            this.results = albums.map(album => this.albumService.createAlbum(album))
+            this.currentPage = 1; // Reset to the first page
+            this.updateDisplayedItems();
+            console.log(this.results);
+          } else {
+            this.results = []; // No results found
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching artists:', err);
+          this.item = null;
+        }
+      });
+    }
+  }
+
+  searchSong(): void {
+    console.log("here");
+    if (this.searchQuery.trim() !== '') {
+      this.externalAPIservice.searchSong(this.searchQuery).subscribe({
+        next: (songs: Song[]) => {
+          if (songs.length > 0) {
+            this.results = songs.map(song => this.songService.createSong(song))
+            this.currentPage = 1; // Reset to the first page
+            this.updateDisplayedItems();
+            console.log(this.results);
+          } else {
+            this.results = []; // No results found
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching Songs:', err);
           this.item = null;
         }
       });

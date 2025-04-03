@@ -27,6 +27,6 @@ export class SpotifyService extends ExternalAPIService {
 
   // The searchArtist method now correctly forms the URL without duplicating the base URL
   override searchAlbum(albumName: string): Observable<Album[]> {
-    return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${albumName}`);
+    return this.http.get<Album[]>(`${this.apiUrl}search/album/${albumName}`);
   }
 }
