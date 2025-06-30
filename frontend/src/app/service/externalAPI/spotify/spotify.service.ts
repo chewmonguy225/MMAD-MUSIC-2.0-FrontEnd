@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Artist } from '../../../model/item/artist.type';
 import { Album } from '../../../model/item/album.type';
 import { Item } from '../../../model/item/item.type';
+import { Song } from '../../../model/item/song.type';
 import { ExternalAPIService } from '../external-api.service';
 
 @Injectable({
@@ -18,6 +19,10 @@ export class SpotifyService extends ExternalAPIService {
 
   override searchItem(itemName: string): Observable<Item[]> {
     return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${itemName}`);
+  }
+
+  override searchSong(songName: string): Observable<Song[]> {
+    return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${songName}`);
   }
 
   override searchArtist(artistName: string): Observable<Artist[]> {

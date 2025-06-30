@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Artist } from '../../model/item/artist.type';
 import { Album } from '../../model/item/album.type';
+import { Song } from '../../model/item/song.type';
 import { Item } from '../../model/item/item.type';
 import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
 import { ItemComponent } from '../item/item.component';
