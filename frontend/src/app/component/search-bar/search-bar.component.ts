@@ -26,8 +26,8 @@ export class SearchBarComponent {
   item: Item | null = null;
   currentPage: number = 1;
   itemsPerPage: number = 5;
-  
-  constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService, private albumService: AlbumService) {
+
+  constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService, private albumService: AlbumService, private songService: SongService) {
   }
 
   onSearchInput(event: Event): void {
@@ -41,7 +41,7 @@ export class SearchBarComponent {
       this.externalAPIservice.searchArtist(this.searchQuery).subscribe({
         next: (artists: Artist[]) => {
           if (artists.length > 0) {
-             console.log("here");
+            console.log("here");
             this.results = artists.map(artist => this.artistService.createArtist(artist))
             this.currentPage = 1; // Reset to the first page
             this.updateDisplayedItems();
@@ -73,7 +73,7 @@ export class SearchBarComponent {
           }
         },
         error: (err) => {
-          console.error('Error fetching artists:', err);
+          console.error('Error fetching albums:', err);
           this.item = null;
         }
       });
@@ -81,7 +81,7 @@ export class SearchBarComponent {
   }
 
   searchSong(): void {
-    console.log("here");
+    console.log("hereSong");
     if (this.searchQuery.trim() !== '') {
       this.externalAPIservice.searchSong(this.searchQuery).subscribe({
         next: (songs: Song[]) => {
@@ -126,5 +126,5 @@ export class SearchBarComponent {
   getTotalPages(): number {
     return Math.ceil(this.results.length / this.itemsPerPage);
   }
-  
+
 }

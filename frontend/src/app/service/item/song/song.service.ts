@@ -7,15 +7,15 @@ import { ItemService } from '../item.service';
   providedIn: 'root'
 })
 export class SongService extends ItemService {
-  protected override apiUrl = 'http://localhost:8080/artist';
-  protected searchUrl = 'http://localhost:8080/spotify/search/artist';
+  protected override apiUrl = 'http://localhost:8080/song';
+  protected searchUrl = 'http://localhost:8080/spotify/search/song';
 
   constructor(protected override http: HttpClient) {
     super(http);
   }
 
   public createSong(data: any): Song {
-    return new Song(data.id, data.sourceId, data.artistID, data.albumID, data.name, data.imageURL);
+    return new Song(data.id, data.sourceId, data.artist.ID, data.album.ID, data.name, data.imageURL);
   }
 
   getSongWithId(id: number): Observable<Song> {

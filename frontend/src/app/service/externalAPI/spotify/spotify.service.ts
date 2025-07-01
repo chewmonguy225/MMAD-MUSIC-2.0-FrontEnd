@@ -18,11 +18,11 @@ export class SpotifyService extends ExternalAPIService {
   }
 
   override searchItem(itemName: string): Observable<Item[]> {
-    return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${itemName}`);
+    return this.http.get<Item[]>(`${this.apiUrl}search/item/${itemName}`);
   }
 
   override searchSong(songName: string): Observable<Song[]> {
-    return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${songName}`);
+    return this.http.get<Song[]>(`${this.apiUrl}search/song/${songName}`);
   }
 
   override searchArtist(artistName: string): Observable<Artist[]> {
