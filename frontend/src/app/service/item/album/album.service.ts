@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Album } from '../../../model/item/album.type';
+import { Artist } from '../../../model/item/artist.type';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { ItemService } from '../item.service';
@@ -15,7 +16,8 @@ export class AlbumService extends ItemService {
   }
 
   public createAlbum(data: any): Album {
-    return new Album(data.id, data.sourceId, data.artistID, data.name, data.imageURL);
+    const artist = new Artist(0, data.artist.id, data.artist.name, data.imageURL);
+    return new Album(data.id, data.sourceId, artist, data.name, data.imageURL);
   }
 
   getArtistWithId(id: number): Observable<Album> {

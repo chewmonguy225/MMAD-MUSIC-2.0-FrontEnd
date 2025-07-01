@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Song } from '../../../model/item/song.type';
+import { Artist } from '../../../model/item/artist.type';
+import { Album } from '../../../model/item/album.type';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { ItemService } from '../item.service';
@@ -15,8 +17,12 @@ export class SongService extends ItemService {
   }
 
   public createSong(data: any): Song {
-    return new Song(data.id, data.sourceId, data.artist.ID, data.album.ID, data.name, data.imageURL);
+    const artist = new Artist(0, data.artist.id, data.artist.name, data.imageURL);
+    const album = new Album(0, data.album.id, artist, data.album.name, data.album.imageURL);
+    console.log (data.imageURL)
+    return new Song(data.id, data.sourceId, artist, album, data.name, data.imageURL);
   }
+  
 
   getSongWithId(id: number): Observable<Song> {
     return this.http.get<any>(`${this.apiUrl}/find/${id}`).pipe(
