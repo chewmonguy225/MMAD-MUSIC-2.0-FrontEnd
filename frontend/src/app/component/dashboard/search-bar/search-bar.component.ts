@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { Artist } from '../../model/item/artist.type';
 import { Album } from '../../model/item/album.type';
 import { Song } from '../../model/item/song.type';
@@ -12,8 +13,10 @@ import { AlbumService } from '../../service/item/album/album.service';
 import { SongService } from '../../service/item/song/song.service';
 
 
+
 @Component({
   selector: 'app-search-bar',
+  standalone: true,
   imports: [ArtistComponent, CommonModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
