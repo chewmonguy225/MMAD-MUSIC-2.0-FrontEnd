@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ItemComponent } from '../item.component';
-import { ReviewComponent } from '../../../review/review.component'; // Adjust path as needed
+import { ReviewComponent } from '../../review/reviewWriter/review.component'; // Adjust path as needed
 import { ArtistService } from '../../../service/item/artist/artist.service';
 
 @Component({

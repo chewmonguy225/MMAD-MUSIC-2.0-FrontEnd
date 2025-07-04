@@ -1,15 +1,34 @@
-<img
-  [src]="item?.getImageURL()"
-  alt="Image"
-  style="width: 100%; cursor: pointer"
-  (click)="onImageClick()"
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 />
 
-<h1>{{ item?.getName() }}</h1>
+<div class="card">
+  <!-- Clickable image -->
+  <img
+    [src]="item?.getImageURL()"
+    alt="Image"
+    style="width: 100%; cursor: pointer"
+    (click)="onImageClick()"
+  />
 
-<a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a>
-<a href="#"><i class="fa fa-apple"></i></a>
+  <!-- Item name -->
+  <h1>{{ item?.getName() }}</h1>
 
-<ng-container *ngIf="showReviewButton">
-  <button (click)="writeReview()">Write a Review</button>
-</ng-container>
+  <!-- Spotify and Apple links -->
+  <a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a>
+  <a href="#"><i class="fa fa-apple"></i></a>
+
+  <!-- Review button appears on image click -->
+  <ng-container *ngIf="showReviewButton">
+    <button (click)="writeReview()">Write a Review</button>
+  </ng-container>
+
+  <!-- Review component (optional) -->
+  <app-review
+    *ngIf="showReviewInput"
+    [item]="item"
+    (submitted)="onReviewSubmitted($event)"
+    (cancel)="onReviewCancelled()"
+  ></app-review>
+</div>
