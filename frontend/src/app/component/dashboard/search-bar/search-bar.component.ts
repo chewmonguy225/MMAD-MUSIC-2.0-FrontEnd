@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Artist } from '../../../model/item/artist.type';
-import { Album } from '../../../model/item/album.type';
-import { Song } from '../../../model/item/song.type';
-import { Item } from '../../../model/item/item.type';
-import { SpotifyService } from '../../../service/externalAPI/spotify/spotify.service';
-import { ItemComponent } from '../../item/item.component';
-import { ArtistComponent } from '../../item/artist/artist.component';
-import { ArtistService } from '../../../service/item/artist/artist.service';
-import { AlbumService } from '../../../service/item/album/album.service';
-import { SongService } from '../../../service/item/song/song.service';
+
+import { Artist } from '../../model/item/artist.type';
+import { Album } from '../../model/item/album.type';
+import { Song } from '../../model/item/song.type';
+import { Item } from '../../model/item/item.type';
+import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
+import { ItemComponent } from '../item/item.component';
+import { ArtistComponent } from '../item/artist/artist.component';
+import { ArtistService } from '../../service/item/artist/artist.service';
+import { AlbumService } from '../../service/item/album/album.service';
+import { SongService } from '../../service/item/song/song.service';
+
 
 
 @Component({
