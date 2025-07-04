@@ -1,7 +1,15 @@
-<div class="card">
-  <img [src]="item?.getImageURL()" alt="Artist Image" style="width:100%">
-  <h1>{{ item?.getName() }}</h1>
-  <a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a> <!-- Calls the method when clicked -->
-  <a href="#"><i class="fa fa-apple"></i></a>
-</div>
+<img
+  [src]="item?.getImageURL()"
+  alt="Image"
+  style="width: 100%; cursor: pointer"
+  (click)="onImageClick()"
+/>
 
+<h1>{{ item?.getName() }}</h1>
+
+<a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a>
+<a href="#"><i class="fa fa-apple"></i></a>
+
+<ng-container *ngIf="showReviewButton">
+  <button (click)="writeReview()">Write a Review</button>
+</ng-container>

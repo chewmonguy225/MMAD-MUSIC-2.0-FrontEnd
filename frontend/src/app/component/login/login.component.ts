@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../service/user/user.service';
+import { AuthService } from '../../service/auth/auth.service';
 import { NgIf } from '@angular/common';
-
 
 @Component({
   selector: 'app-login',
@@ -19,6 +19,7 @@ export class LoginComponent {
 
   router = inject(Router);
   userService = inject(UserService);
+  authService = inject(AuthService); // inject AuthService
 
   isLoginView: boolean = false;
   errorMessage: string = '';
@@ -35,7 +36,6 @@ export class LoginComponent {
 
 
   onRegister() {
-
     this.errorMessage = '';
 
     if(!this.registerObj.username || !this.registerObj.password) {
@@ -67,10 +67,12 @@ export class LoginComponent {
     }
 
     this.userService.login(this.loginObj).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
+        // Here you expect res to have: { token, user }
+        this.authService.setSession(res.token, res.user);
         alert("Login success");
-        localStorage.setItem('isLoggedIn', 'true');
-        this.router.navigateByUrl('dashboard')
+        // Remove isLoggedIn from localStorage, authService manages that now
+        this.router.navigateByUrl('dashboard');
       },
       error: (err) => {
         console.error("Login error:", err.message);
@@ -88,7 +90,7 @@ export class LoginComponent {
 
 
   isLoggedIn(): boolean {
-    return localStorage.getItem('isLoggedIn') == 'true';
+    return this.authService.isLoggedIn();  // Use AuthService method
   }
   
 }

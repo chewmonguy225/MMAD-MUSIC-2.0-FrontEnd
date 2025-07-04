@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ArtistService } from '../../../service/item/artist/artist.service';
-import { Artist } from '../../../model/item/artist.type';
+import { SongService } from '../../../service/item/song/song.service';
+import { Song } from '../../../model/item/song.type';
 import { catchError, of } from 'rxjs';
 import { ItemComponent } from '../item.component';
 
@@ -9,10 +9,10 @@ import { ItemComponent } from '../item.component';
   templateUrl: './song.component.html',
   styleUrls: ['./song.component.css']
 })
-export class ArtistComponent extends ItemComponent implements OnInit {
+export class SongComponent extends ItemComponent implements OnInit {
 
-  constructor(private artistService: ArtistService) {
-    super(artistService);
+  constructor(private songService: SongService) {
+    super(songService);
   }
 
   ngOnInit(): void {
