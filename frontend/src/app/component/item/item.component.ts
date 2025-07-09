@@ -1,19 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { ItemService } from '../../service/item/item.service';
 import { Item } from '../../model/item/item.type';
-import { catchError, of } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ReviewComponent } from '../review/reviewWriter/review.component';
+import { CommonModule } from '@angular/common'; // Already imported
+import { FormsModule } from '@angular/forms'; // Already imported
+import { ReviewWriter } from '../review/reviewWriter/review-writer.component'; // Your ReviewWriter component
 
 @Component({
   selector: 'app-item',
-  imports: [FormsModule, CommonModule, ReviewComponent],
+  imports: [FormsModule, CommonModule, ReviewWriter],
   templateUrl: './item.component.html',
   styleUrl: './item.component.css'
 })
-
-export abstract class ItemComponent {
+export abstract class ItemComponent { // It's an abstract class, which is fine
   @Input() item: Item | null = null;
 
   showReviewButton = false;
@@ -32,19 +30,18 @@ export abstract class ItemComponent {
 
   writeReview(): void {
     this.showReviewInput = true;
+    this.showReviewButton = false; // Optionally hide the "Write a Review" button once the input shows
   }
 
-  onReviewSubmitted(data: { review: string; rating: number }): void {
-    console.log(data.review, data.rating);
-    this.showReviewInput = false;
-    this.showReviewButton = false;
+  onReviewSubmitted(data: { item: Item; description: string; rating: number }): void {
+    console.log('Review submitted from ReviewWriter:', data.item, data.description, data.rating);
+    this.showReviewInput = false; // Hide the review form
+    this.showReviewButton = true; // Show the review button again (or hide completely)
   }
-  
 
   onReviewCancelled(): void {
+    console.log('Review submission cancelled.');
     this.showReviewInput = false;
+    this.showReviewButton = true; // Show the review button again
   }
 }
-
-
-

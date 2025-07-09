@@ -9,7 +9,7 @@
   </span>
 </div>
 
-<textarea [(ngModel)]="reviewText" placeholder="Write your review..."></textarea>
+<textarea [(ngModel)]="description" placeholder="Write your review..."></textarea>
 
-<button (click)="submit()" [disabled]="!reviewText.trim()">Submit</button>
+<button (click)="submit()" [disabled]="!description.trim()">Submit</button>
 <button (click)="cancel.emit()">Cancel</button>

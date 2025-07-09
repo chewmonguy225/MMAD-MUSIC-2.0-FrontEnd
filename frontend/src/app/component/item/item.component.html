@@ -24,12 +24,12 @@
     <button (click)="writeReview()">Write a Review</button>
   </ng-container>
 
-  <app-review
+  <app-review-writer
   *ngIf="showReviewInput"
   [item]="item"
   (submitted)="onReviewSubmitted($event)"
   (cancel)="onReviewCancelled()"
-></app-review>
+></app-review-writer>
 
 
 </div>

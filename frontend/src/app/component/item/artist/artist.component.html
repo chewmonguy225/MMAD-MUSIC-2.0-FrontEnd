@@ -25,10 +25,10 @@
   </ng-container>
 
   <!-- Review component (optional) -->
-  <app-review
+  <app-review-writer
     *ngIf="showReviewInput"
     [item]="item"
     (submitted)="onReviewSubmitted($event)"
     (cancel)="onReviewCancelled()"
-  ></app-review>
+  ></app-review-writer>
 </div>
