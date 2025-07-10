@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ItemComponent } from '../item.component';
-import { ReviewWriter } from '../../review/reviewWriter/review-writer.component'; // Adjust path as needed
 import { ArtistService } from '../../../service/item/artist/artist.service';
+import { ReviewBuilderComponent } from '../../review/review-builder/review-builder.component';
 
 @Component({
   selector: 'app-artist',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReviewWriter],
+  imports: [CommonModule, FormsModule, ReviewBuilderComponent],
   templateUrl: './artist.component.html',
   styleUrls: ['./artist.component.css']
 })

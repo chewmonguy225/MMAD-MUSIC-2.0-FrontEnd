@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
 import { Artist } from '../../../model/item/artist.type';
-import { ItemService } from '../item.service'; 
+import { ItemService } from '../item/item.service'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArtistService extends ItemService {
-  protected override apiUrl = 'http://localhost:8080/artist';
+  protected override apiUrl = 'http://localhost:8080/item/artists';
   // External API search URL
   protected searchUrl = 'http://localhost:8080/spotify/search/artist';
 

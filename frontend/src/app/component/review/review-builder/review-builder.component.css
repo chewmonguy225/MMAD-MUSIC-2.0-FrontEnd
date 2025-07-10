@@ -1,0 +1,42 @@
+.star-rating {
+    /* Optional: Adjust spacing or alignment for stars */
+    display: inline-block;
+  }
+  
+  .star-rating span {
+    color: lightgray; /* Default color for unselected stars */
+    transition: color 0.2s ease-in-out; /* Smooth transition for color change */
+  }
+  
+  .star-rating span.filled {
+    color: gold; /* Color for selected (filled) stars */
+  }
+  
+  /* Optional: Add hover effect for better user experience */
+  .star-rating span:hover {
+    color: orange; /* Color on hover */
+  }
+  
+  /* Ensure textarea and button have basic styling if needed */
+  textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }

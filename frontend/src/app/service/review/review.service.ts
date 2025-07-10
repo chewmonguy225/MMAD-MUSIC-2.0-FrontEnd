@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Review, CreateReviewPayload } from '../../model/review.type';  
+import { Review, ReviewPostRequestPayload } from '../../model/review.type';  
 import { Artist } from '../../model/item/artist.type';
 import { Item } from '../../model/item/item.type';
 import { User } from '../../model/user.type';
@@ -10,11 +10,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'http://localhost:8080/review'; // replace with your real API endpoint
+  private apiUrl = 'http://localhost:8080/reviews'; // replace with your real API endpoint
 
   constructor(private http: HttpClient) {}
 
-  saveReview(reviewPayload: CreateReviewPayload): Observable<any> {
+  saveReview(reviewPayload: ReviewPostRequestPayload): Observable<any> {
     return this.http.post(`${this.apiUrl}/add`, reviewPayload);
   }
 

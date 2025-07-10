@@ -14,10 +14,11 @@ export interface Review {
 }
 
 // For POST /reviews (creation)
-export interface CreateReviewPayload {
-  itemId: number;       // Matches ReviewRequest.itemId
-  rating: number;       // Matches ReviewRequest.rating
-  description: string;  // Matches ReviewRequest.description (let's use 'description' for consistency)
+export interface ReviewPostRequestPayload {
+  username: string;
+  itemId: number;   
+  rating: number;    
+  description: string;  
 }
 
 // For PUT /reviews/{id} (update - if you chose the JSON body approach for PUT)
