@@ -14,9 +14,14 @@ import { ReviewBuilderComponent } from '../../review/review-builder/review-build
 })
 export class ArtistComponent extends ItemComponent {
 
+
   override onSpotifyClick(): void {
-    const id = this.item?.getSourceId();
-    if (id) window.open(`https://open.spotify.com/artist/${id}`, '_blank');
-    else console.error('Missing artist ID');
+    const sourceId = this.item?.getSourceId(); // Access the sourceId property
+    if (sourceId) {
+      // CORRECTED SPOTIFY URL FOR ARTISTS
+      window.open(`https://open.spotify.com/artist/${sourceId}`, '_blank');
+    } else {
+      console.error('Missing artist source ID for Spotify link.');
+    }
   }
 }

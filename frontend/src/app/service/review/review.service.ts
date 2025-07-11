@@ -18,6 +18,17 @@ export class ReviewService {
     return this.http.post(`${this.apiUrl}/add`, reviewPayload);
   }
 
+  getReviewById(id: number): Observable<Review> { // <--- 1. Specify the return type in the method signature
+    if (id <= 0) {
+      throw new Error("Review ID must be a positive number.");
+    }
+    // 2. Specify the expected type to HttpClient.get<Review>()
+    return this.http.get<Review>(`${this.apiUrl}/find/${id}`);
+  }
+
+  getAllReviews():Observable<Review[]>{
+    return this.http.get<Review[]> (`${this.apiUrl}/all`);
+  }
   
 
   
