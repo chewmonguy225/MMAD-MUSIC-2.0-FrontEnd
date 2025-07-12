@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 
 import { Artist } from '../../../model/item/artist.type';
 import { Item } from '../../../model/item/item.type';
+import { Album } from '../../../model/item/album.type';
 import { SpotifyService } from '../../../service/externalAPI/spotify/spotify.service';
 import { ItemComponent } from '../../item/item.component';
 import { ArtistComponent } from '../../item/artist/artist.component';
 import { ArtistService } from '../../../service/item/artist/artist.service';
+import { AlbumService } from '../../../service/item/album/album.service';
 
 
 
@@ -26,7 +28,7 @@ export class SearchBarComponent {
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
-  constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService) {
+  constructor(private externalAPIservice: SpotifyService, private artistService: ArtistService, private albumService: AlbumService) {
   }
 
   onSearchInput(event: Event): void {
@@ -35,25 +37,22 @@ export class SearchBarComponent {
   }
 
   searchArtist(): void {
-    console.log("here");
     if (this.searchQuery.trim() !== '') {
       // Assuming 'this.artistService' is your injected ArtistService instance
       // The method is named 'searchArtists' in the service
       this.artistService.searchArtists(this.searchQuery).subscribe({ // <-- Changed to searchArtists if that's the service method name
         next: (artists: Artist[]) => { // 'artists' is ALREADY an array of Artist objects
+          console.log('Artists found:', artists);  // <-- Added console log here
           if (artists.length > 0) {
-            console.log("here");
             // FIX IS HERE: Directly assign the received 'artists' array
             this.results = artists; // <-- Removed the .map() and createArtist call
             this.currentPage = 1; // Reset to the first page
             this.updateDisplayedItems();
-            console.log(this.results);
           } else {
             this.results = []; // No results found
           }
         },
         error: (err) => {
-          console.error('Error fetching artists:', err);
           this.results = []; // Clear results on error
           // If 'this.item' refers to a single selected item, its handling depends on context.
           // this.item = null; // This line might or might not be necessary depending on what 'this.item' is
@@ -64,6 +63,32 @@ export class SearchBarComponent {
       this.currentPage = 1; // Reset pagination
     }
   }
+
+  searchAlbum(): void {
+    if (this.searchQuery.trim() !== '') {
+      this.albumService.searchAlbums(this.searchQuery).subscribe({
+        next: (albums: Album[]) => {
+          console.log('Albums found:', albums);  // <-- Added console log here
+          if (albums.length > 0) {
+            this.results = albums; // Direct assignment
+            this.currentPage = 1;  // Reset pagination
+            this.updateDisplayedItems();
+          } else {
+            this.results = []; // No results found
+          }
+        },
+        error: (err) => {
+          this.results = []; // Clear on error
+          // Optional: handle error logging or notifications here
+        }
+      });
+    } else {
+      this.results = []; // Clear if input is empty
+      this.currentPage = 1;
+    }
+  }
+  
+
 
 
   updateDisplayedItems(): void {

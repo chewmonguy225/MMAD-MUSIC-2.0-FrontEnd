@@ -34,8 +34,6 @@ export abstract class ItemComponent { // It's an abstract class, which is fine
   }
 
   onReviewSubmitted(data: { item: Item; description: string; rating: number }): void {
-    console.log('Review submitted from ReviewWriter:', data.item, data.description, data.rating);
-
     this.showReviewInput = false; // Hide the review form
     this.showReviewButton = true; // Show the review button again (or hide completely)
   }

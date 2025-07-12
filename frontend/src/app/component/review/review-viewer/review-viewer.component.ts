@@ -51,7 +51,6 @@ export class ReviewViewerComponent implements OnInit {
         plainReview.item.updatedAt
       );
     } else {
-      console.warn('Review item data missing, using dummy item.');
       itemInstance = new Artist(0, '', 'Unknown Item', '', '', ''); // Provide a dummy if item is null
     }
 
@@ -74,26 +73,7 @@ export class ReviewViewerComponent implements OnInit {
 
     this.reviewService.getAllReviews().subscribe({
       next: (plainReviews: any[]) => {
-        // --- Use the mapping function here ---
         this.reviews = plainReviews.map(this.mapJsonToReviewInstance.bind(this));
-        // ------------------------------------
-
-        console.log('Successfully fetched and mapped all reviews:', this.reviews);
-        this.isLoading = false;
-
-        // Now, these logs will work because 'review' is a Review CLASS instance
-        if (this.reviews && this.reviews.length > 0) {
-          this.reviews.forEach((review, index) => {
-            console.log(`Review ${index} item (after mapping):`, review.getItem()); // Using getItem()
-            if (review.getItem()) {
-              console.log(`  Item ID: ${review.getItem().getId()}`); // Using getId()
-              console.log(`  Item Name: ${review.getItem().getName()}`); // Using getName()
-              console.log(`  Item Image URL: ${review.getItem().getImageURL()}`); // Using getImageURL()
-            } else {
-              console.warn(`  Review ${index} has no item data after mapping!`);
-            }
-          });
-        }
       },
       error: (error: HttpErrorResponse) => {
         // ... (error handling) ...
