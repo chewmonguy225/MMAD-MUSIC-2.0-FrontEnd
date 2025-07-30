@@ -1,0 +1,114 @@
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80px; /* compact sidebar */
+    background-color: #fe7614;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    align-items: center;
+    gap: 40px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* stays above other content */
+  }
+  
+  /* All navigation sections inside the header */
+  nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    font-size: 28px; /* increase icon size */
+    width: 100%;
+    position: relative; /* needed for search input positioning */
+  }
+  
+  /* Links and icons */
+  nav a,
+  nav span {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Hover effect */
+  nav a:hover,
+  nav span:hover {
+    color: #dddddd;
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Active link highlight */
+  .active-link {
+    color: #ffd700;
+    background-color: rgba(255, 255, 255, 0.25);
+    font-weight: bold;
+    border-radius: 8px;
+  }
+  
+  /* Optional: slightly larger icon size for clarity */
+  nav i {
+    font-size: 28px;
+  }
+  
+  /* Record icon color override */
+  .record-icon {
+    color: black !important;
+  }
+  
+  /* Search icon styling */
+  nav .search-icon {
+    cursor: pointer;
+    font-size: 28px;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+  }
+  
+  nav .search-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Search input wrapper */
+  nav .search-wrapper {
+    position: absolute;
+    left: 80px; /* sidebar width */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    box-sizing: border-box;
+    /* Optional shadow for input */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    background-color: white;
+  }
+  
+  /* Expanded search input */
+  nav .search-wrapper.expanded {
+    width: 200px; /* expanded width */
+  }
+  
+  /* Search input styles */
+  nav .search-wrapper input {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+  }
+  

@@ -1,0 +1,21 @@
+<div class="review-item" *ngIf="review">
+    <div class="review-header">
+      <span class="review-username">Reviewed by: **{{ review.user.username }}**</span>
+      <span class="review-rating">Rating: {{ review.rating }} / 5</span>
+    </div>
+    <p class="review-description">"{{ review.description }}"</p>
+  
+    <div class="reviewed-item-section">
+      <h4>Reviewed Item:</h4>
+      <ng-container [ngSwitch]="itemType">
+        <app-artist *ngSwitchCase="'ARTIST'" [item]="itemAsArtist"></app-artist>
+        <app-album *ngSwitchCase="'ALBUM'" [item]="itemAsAlbum"></app-album>
+        <app-song *ngSwitchCase="'SONG'" [item]="itemAsSong"></app-song>
+        <div *ngSwitchDefault>...</div>
+      </ng-container>      
+    </div>
+  
+    <p class="review-timestamps">
+      Created: {{ review.createdAt | date:'short' }} | Last Updated: {{ review.updatedAt | date:'short' }}
+    </p>
+  </div>
