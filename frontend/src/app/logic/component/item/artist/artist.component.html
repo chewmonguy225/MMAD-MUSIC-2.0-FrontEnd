@@ -9,7 +9,6 @@
       [src]="item?.getImageURL()"
       [alt]="item?.getName() || 'Item Image'"
       class="item-image"
-      (click)="onImageClick()"
     />
   </div>
 
@@ -22,21 +21,4 @@
       <i class="fa fa-spotify"></i>
     </a>
   </div>
-
-  <!-- Review Button -->
-  <ng-container *ngIf="showReviewButton">
-    <div class="review-button-container">
-      <button (click)="writeReview()" class="review-button">
-        Write a Review
-      </button>
-    </div>
-  </ng-container>
-
-  <!-- Review Builder Component -->
-  <app-review-builder
-    *ngIf="showReviewInput"
-    [item]="item"
-    (submitted)="onReviewSubmitted($event)"
-    (cancel)="onReviewCancelled()"
-  ></app-review-builder>
 </div>

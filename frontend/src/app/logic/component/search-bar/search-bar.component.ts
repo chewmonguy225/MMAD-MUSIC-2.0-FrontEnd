@@ -38,6 +38,7 @@ export class SearchBarComponent {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   searchType: 'artist' | 'album' | 'song' | 'user' = 'artist';
+  
 
   constructor(
     private externalAPIservice: SpotifyService,
@@ -51,6 +52,45 @@ export class SearchBarComponent {
     const input = event.target as HTMLInputElement;
     this.searchQuery = input.value;
   }
+
+  searchAll(): void {
+    if (this.searchQuery.trim() === '') {
+      this.results = [];
+      this.userResults = [];
+      this.displayedItems = [];
+      this.displayedUserResults = [];
+      this.currentPage = 1;
+      return;
+    }
+
+  
+    const artist$ = this.artistService.searchArtists(this.searchQuery);
+    const album$ = this.albumService.searchAlbums(this.searchQuery);
+    const song$ = this.songService.searchSongs(this.searchQuery);
+    const user$ = this.userService.searchUsers(this.searchQuery);
+  
+    // Use forkJoin to wait for all observables to complete
+    import('rxjs').then(rxjs => {
+      rxjs.forkJoin([artist$, album$, song$, user$]).subscribe({
+        next: ([artists, albums, songs, users]) => {
+          this.results = [
+            ...artists,
+            ...albums.map(album => Album.fromJson(album)),
+            ...songs.map(song => Song.fromJson(song))
+          ];
+          this.userResults = users;
+  
+          this.currentPage = 1;
+          this.updateDisplayedItems();
+        },
+        error: () => {
+          this.results = [];
+          this.userResults = [];
+        }
+      });
+    });
+  }
+  
 
   searchArtist(): void {
     this.searchType = 'artist';

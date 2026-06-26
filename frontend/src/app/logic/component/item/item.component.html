@@ -4,12 +4,10 @@
 />
 
 <div class="card">
-  <!-- Clickable image -->
   <img
     [src]="item?.getImageURL()"
     alt="Image"
     style="width: 100%; cursor: pointer"
-    (click)="onImageClick()"
   />
 
   <!-- Item name -->
@@ -18,18 +16,5 @@
   <!-- Spotify and Apple links -->
   <a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a>
   <a href="#"><i class="fa fa-apple"></i></a>
-
-  <!-- Review button appears on image click -->
-  <ng-container *ngIf="showReviewButton">
-    <button (click)="writeReview()">Write a Review</button>
-  </ng-container>
-
-  <app-review-builder
-  *ngIf="showReviewInput"
-  [item]="item"
-  (submitted)="onReviewSubmitted($event)"
-  (cancel)="onReviewCancelled()"
-></app-review-builder>
-
 
 </div>

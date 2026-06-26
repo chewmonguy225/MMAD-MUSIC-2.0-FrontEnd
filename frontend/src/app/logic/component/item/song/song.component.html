@@ -2,7 +2,7 @@
 
 <div class="item-card">
     <!-- Clickable image -->
-    <img [src]="item?.getImageURL()" alt="Song Cover" style="width: 100%; cursor: pointer" (click)="onImageClick()" />
+    <img [src]="item?.getImageURL()" alt="Song Cover" style="width: 100%; cursor: pointer" />
 
     <!-- Song title -->
     <h1>{{ item?.getName() }}</h1>
@@ -27,14 +27,4 @@
     <!-- Spotify and Apple icons -->
     <a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a>
     <a href="#"><i class="fa fa-apple"></i></a>
-
-    <!-- Review button toggler -->
-    <ng-container *ngIf="showReviewButton">
-        <button (click)="writeReview()">Write a Review</button>
-    </ng-container>
-
-    <!-- Review input form -->
-    <app-review-builder *ngIf="showReviewInput" [item]="item" (submitted)="onReviewSubmitted($event)"
-        (cancel)="onReviewCancelled()">
-    </app-review-builder>
 </div>
