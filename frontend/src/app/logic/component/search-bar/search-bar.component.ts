@@ -17,6 +17,8 @@ import { ArtistComponent } from '../item/artist/artist.component';
 import { AlbumComponent } from '../item/album/album.component';
 import { SongComponent } from '../item/song/song.component';
 import { UserCardComponent } from '../user-card/user-card.component';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-bar',
@@ -26,6 +28,8 @@ import { UserCardComponent } from '../user-card/user-card.component';
   styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent {
+
+  private searchSubject = new Subject<string>();
   searchQuery: string = '';
 
   //for items
@@ -48,10 +52,33 @@ export class SearchBarComponent {
     private userService: UserService
   ) { }
 
-  onSearchInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchQuery = input.value;
-  }
+  ngOnInit(): void {
+  this.searchSubject.pipe(
+    debounceTime(300),
+    distinctUntilChanged()
+  ).subscribe(query => {
+    this.searchQuery = query;
+
+    if (this.searchType === 'artist') {
+      this.searchArtist();
+    } else if (this.searchType === 'album') {
+      this.searchAlbum();
+    } else if (this.searchType === 'song') {
+      this.searchSong();
+    } else {
+      this.searchUser();
+    }
+  });
+}
+
+onSearchInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  this.searchSubject.next(input.value);
+}
+  //onSearchInput(event: Event): void {
+    //const input = event.target as HTMLInputElement;
+    //this.searchQuery = input.value;
+  //}
 
   searchAll(): void {
     if (this.searchQuery.trim() === '') {
