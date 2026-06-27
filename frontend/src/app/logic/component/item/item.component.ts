@@ -3,11 +3,10 @@ import { ItemService } from '../../service/item/item/item.service';
 import { Item } from '../../model/item/item.type';
 import { CommonModule } from '@angular/common'; // Already imported
 import { FormsModule } from '@angular/forms'; // Already imported
-import { ReviewBuilderComponent } from '../review/review-builder/review-builder.component';
 
 @Component({
   selector: 'app-item',
-  imports: [FormsModule, CommonModule, ReviewBuilderComponent],
+  imports: [FormsModule, CommonModule],
   templateUrl: './item.component.html',
   styleUrl: './item.component.css'
 })

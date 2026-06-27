@@ -53,8 +53,8 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
         this.updateFollowingStatus(); // Check follow status whenever profile loads
 
         this.reviewService.getUserReviews(username).subscribe({
-          next: plainReviews => {
-            this.reviews = plainReviews.map(Review.fromJSON);
+          next: (reviews: Review[]) => {
+            this.reviews = reviews;
           },
           error: err => console.error('Failed to load reviews:', err)
         });

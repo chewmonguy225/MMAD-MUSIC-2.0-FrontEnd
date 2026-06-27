@@ -5,13 +5,13 @@
 
 <div class="card">
   <img
-    [src]="item?.getImageURL()"
+    [src]="item?.imageURL"
     alt="Image"
     style="width: 100%; cursor: pointer"
   />
 
   <!-- Item name -->
-  <h1>{{ item?.getName() }}</h1>
+  <h1>{{ item?.name }}</h1>
 
   <!-- Spotify and Apple links -->
   <a href="#" (click)="onSpotifyClick()"><i class="fa fa-spotify"></i></a>

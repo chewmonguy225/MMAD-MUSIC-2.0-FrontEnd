@@ -4,14 +4,14 @@
 
     <!-- IMAGE -->
     <div class="review-image">
-      <img [src]="a.getImageURL()" alt="{{ a.getName() }}" />
+      <img [src]="a.imageURL" alt="{{ a.name }}" />
     </div>
 
     <div class="review-body">
 
       <div class="body-top">
-        <h1 class="artist-name">{{ a.getName() }}</h1>
-        <h2 class="username">{{ review.getUser().username }}</h2>
+        <h1 class="artist-name">{{ a.name }}</h1>
+        <h2 class="username">{{ review.user.username }}</h2>
       </div>
 
       <span class="stars">
@@ -20,74 +20,10 @@
 
       <div class="body-middle">
 
-        <body> {{review.getDescription()}} </body>
+        <body> {{review.description}} </body>
       </div>
     </div>
 
   </div>
-
-  <!-- ALBUM -->
-  <div *ngIf="album as al" class="review-row album">
-
-    <!-- IMAGE -->
-    <div class="review-image">
-      <img [src]="al.getImageURL()" alt="{{ al.getName() }}" />
-    </div>
-
-    <div class="review-body">
-
-      <div class="body-top">
-        <div class="item-info"> 
-          <h1 class="album-name">{{ al.getName() }}</h1>
-          <h2 class="album-artist"> {{al.getArtists()[0].getName()}}</h2>
-        </div>
-        <h2 class="username">{{ review.getUser().username }}</h2>
-      </div>
-
-      <span class="stars">
-        <span *ngFor="let _ of stars">⭐</span>
-      </span>
-
-      <div class="body-middle">
-        <p>{{ review.getDescription() }}</p>
-      </div>
-
-    </div>
-
-  </div>
-  <!-- SONG -->
-<div *ngIf="song as s" class="review-row song">
-
-  <!-- IMAGE -->
-  <div class="review-image">
-    <img [src]="s.getImageURL()" alt="{{ s.getName() }}" />
-  </div>
-
-  <div class="review-body">
-
-    <div class="body-top">
-      <div class="item-info">
-        <h1 class="song-name">{{ s.getName() }}</h1>
-        <h2 class="song-artist">
-          {{ s.getArtists()[0].getName() }}
-        </h2>
-      </div>
-
-      <h2 class="username">
-        {{ review.getUser().username }}
-      </h2>
-    </div>
-
-    <span class="stars">
-      <span *ngFor="let _ of stars">⭐</span>
-    </span>
-
-    <div class="body-middle">
-      <p>{{ review.getDescription() }}</p>
-    </div>
-
-  </div>
-
-</div>
 
 </div>

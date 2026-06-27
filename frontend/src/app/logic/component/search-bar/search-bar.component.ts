@@ -1,215 +1,107 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Artist } from '../../model/item/artist.type';
-import { Album } from '../../model/item/album.type';
-import { Song } from '../../model/item/song.type';
 import { Item } from '../../model/item/item.type';
 import { UserDTO } from '../../service/user/user.service';
 
-import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
-import { ArtistService } from '../../service/item/artist/artist.service';
-import { AlbumService } from '../../service/item/album/album.service';
-import { SongService } from '../../service/item/song/song.service';
+import { SearchService } from '../../service/search/search.service';
 import { UserService } from '../../service/user/user.service';
 
 import { ArtistComponent } from '../item/artist/artist.component';
-import { AlbumComponent } from '../item/album/album.component';
-import { SongComponent } from '../item/song/song.component';
 import { UserCardComponent } from '../user-card/user-card.component';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [ArtistComponent, AlbumComponent, SongComponent, UserCardComponent, CommonModule],
+  imports: [
+    ArtistComponent,
+    CommonModule
+  ],
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
 })
-export class SearchBarComponent {
+export class SearchBarComponent implements OnInit {
 
   private searchSubject = new Subject<string>();
   searchQuery: string = '';
 
-  //for items
-  results: (Item)[] = [];
-  displayedItems: (Item)[] = [];
-  //for users
-  userResults: UserDTO[] = [];
-  displayedUserResults: UserDTO[] = [];
+  // results
+  results: Item[] = [];
+  displayedItems: Item[] = [];
 
+  // pagination
   currentPage: number = 1;
   itemsPerPage: number = 5;
-  searchType: 'artist' | 'album' | 'song' | 'user' = 'artist';
-  
+
+  // filter
+  searchType: 'artist' | 'album' | 'song' | 'user' | 'all' = 'all';
 
   constructor(
-    private externalAPIservice: SpotifyService,
-    private artistService: ArtistService,
-    private albumService: AlbumService,
-    private songService: SongService,
+    private searchService: SearchService,
     private userService: UserService
   ) { }
 
   ngOnInit(): void {
-  this.searchSubject.pipe(
-    debounceTime(300),
-    distinctUntilChanged()
-  ).subscribe(query => {
-    this.searchQuery = query;
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.searchQuery = query;
+      this.performSearch();
+    });
+  }
 
-    if (this.searchType === 'artist') {
-      this.searchArtist();
-    } else if (this.searchType === 'album') {
-      this.searchAlbum();
-    } else if (this.searchType === 'song') {
-      this.searchSong();
-    } else {
-      this.searchUser();
-    }
-  });
-}
+  // INPUT HANDLER
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchSubject.next(input.value);
+  }
 
-onSearchInput(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  this.searchSubject.next(input.value);
-}
-  //onSearchInput(event: Event): void {
-    //const input = event.target as HTMLInputElement;
-    //this.searchQuery = input.value;
-  //}
+  // MAIN SEARCH
+  performSearch(): void {
 
-  searchAll(): void {
-    if (this.searchQuery.trim() === '') {
+    const query = this.searchQuery.trim();
+
+    if (!query) {
       this.results = [];
-      this.userResults = [];
       this.displayedItems = [];
-      this.displayedUserResults = [];
       this.currentPage = 1;
       return;
     }
 
-  
-    const artist$ = this.artistService.searchArtists(this.searchQuery);
-    const album$ = this.albumService.searchAlbums(this.searchQuery);
-    const song$ = this.songService.searchSongs(this.searchQuery);
-    const user$ = this.userService.searchUsers(this.searchQuery);
-  
-    // Use forkJoin to wait for all observables to complete
-    import('rxjs').then(rxjs => {
-      rxjs.forkJoin([artist$, album$, song$, user$]).subscribe({
-        next: ([artists, albums, songs, users]) => {
-          this.results = [
-            ...artists,
-            ...albums.map(album => Album.fromJson(album)),
-            ...songs.map(song => Song.fromJson(song))
-          ];
-          this.userResults = users;
-  
-          this.currentPage = 1;
-          this.updateDisplayedItems();
-        },
-        error: () => {
-          this.results = [];
-          this.userResults = [];
-        }
-      });
+    let types: string[] | undefined = undefined;
+
+    if (this.searchType !== 'all') {
+      types = [this.searchType];
+    }
+
+    this.searchService.search(query, types).subscribe({
+      next: (response: any) => {
+
+        const artists = response?.artists ?? [];
+
+        this.results = artists;
+
+        this.currentPage = 1;
+        this.updateDisplayedItems();
+      },
+
+      error: (err) => {
+        console.error('❌ SEARCH ERROR:', err);
+      }
     });
   }
-  
 
-  searchArtist(): void {
-    this.searchType = 'artist';
-    if (this.searchQuery.trim() !== '') {
-      this.artistService.searchArtists(this.searchQuery).subscribe({
-        next: (artists: Artist[]) => {
-          this.results = artists;
-          this.currentPage = 1;
-          this.updateDisplayedItems();
-        },
-        error: () => {
-          this.results = [];
-        }
-      });
-    } else {
-      this.results = [];
-      this.currentPage = 1;
-    }
-  }
-
-  searchAlbum(): void {
-    this.searchType = 'album';
-    if (this.searchQuery.trim() !== '') {
-      this.albumService.searchAlbums(this.searchQuery).subscribe({
-        next: (albums: Album[]) => {
-          // Convert plain objects to instances of Album class
-          this.results = albums.map(album => Album.fromJson(album));
-          this.currentPage = 1;
-          this.updateDisplayedItems();
-        },
-        error: () => {
-          this.results = [];
-        }
-      });
-    } else {
-      this.results = [];
-      this.currentPage = 1;
-    }
-  }
-
-  searchSong(): void {
-    this.searchType = 'song';
-    if (this.searchQuery.trim() !== '') {
-      this.songService.searchSongs(this.searchQuery).subscribe({
-        next: (songs: Song[]) => {
-          // Convert plain objects to instances of Song class
-          this.results = songs.map(song => Song.fromJson(song));
-          this.currentPage = 1;
-          this.updateDisplayedItems();
-        },
-        error: () => {
-          this.results = [];
-        }
-      });
-    } else {
-      this.results = [];
-      this.currentPage = 1;
-    }
-  }
-
-  searchUser(): void {
-    this.searchType = 'user';
-    if (this.searchQuery.trim() !== '') {
-      this.userService.searchUsers(this.searchQuery).subscribe({
-        next: (users: UserDTO[]) => {
-          this.userResults = users;
-          this.currentPage = 1;
-          this.updateDisplayedItems();
-        },
-        error: () => {
-          this.userResults = [];
-        }
-      });
-    } else {
-      this.userResults = [];
-      this.currentPage = 1;
-    }
-  }
-  
-
-
+  // PAGINATION
   updateDisplayedItems(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-  
-    if (this.searchType === 'user') {
-      this.displayedUserResults = this.userResults.slice(startIndex, endIndex);
-    } else {
-      this.displayedItems = this.results.slice(startIndex, endIndex);
-    }
+
+    this.displayedItems = this.results.slice(startIndex, endIndex);
   }
-  
 
   nextPage(): void {
     if (this.currentPage * this.itemsPerPage < this.results.length) {
@@ -229,17 +121,8 @@ onSearchInput(event: Event): void {
     return Math.ceil(this.results.length / this.itemsPerPage);
   }
 
-  // Type guards for template
-
+  // TYPE GUARDS
   isArtist(item: Item): item is Artist {
     return this.searchType === 'artist';
-  }
-
-  isAlbum(item: Item): item is Album {
-    return this.searchType === 'album';
-  }
-
-  isSong(item: Item): item is Song {
-    return this.searchType === 'song';
   }
 }

@@ -31,14 +31,15 @@ export class ReviewViewerComponent{
 
   viewAll(): void {
     this.reviewService.getAllReviews().subscribe({
-      next: (plainReviews: any[]) => {
-        this.reviews = plainReviews.map(reviewJson => Review.fromJSON(reviewJson));
+      next: (reviews: Review[]) => {
+        this.reviews = reviews;
+        console.log('Reviews loaded:', this.reviews);
       },
       error: (error: HttpErrorResponse) => {
-        // handle errors here
+        console.error('Failed to load reviews:', error);
       },
       complete: () => {
-        // optional completion logic here
+        // optional cleanup logic
       }
     });
   }
