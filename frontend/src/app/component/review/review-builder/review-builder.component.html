@@ -1,0 +1,39 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+        <button class="modal-close" (click)="close()">×</button>
+
+        <!-- STEP 1: SELECT ITEM (Artist for now) -->
+        <div *ngIf="step === 'search'">
+            <h2>Select an Artist</h2>
+
+            <!-- Your search bar emits selected artist -->
+            <app-search-bar (itemSelected)="selectItem($event)">
+            </app-search-bar>
+        </div>
+
+        <!-- STEP 2: RATING -->
+        <div *ngIf="step === 'rate'">
+            <h2>Rate {{ selectedItem?.name }}</h2>
+
+            <div class="stars">
+                <button *ngFor="let star of [1,2,3,4,5]" (click)="setRating(star)">
+                    ⭐ {{ star }}
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: TEXT REVIEW -->
+        <div *ngIf="step === 'text'">
+            <h2>Write your review</h2>
+
+            <textarea [(ngModel)]="text" placeholder="Write your thoughts...">
+        </textarea>
+
+            <div class="actions">
+                <button (click)="submit()">Submit Review</button>
+            </div>
+        </div>
+
+    </div>
+</div>

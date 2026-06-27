@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService, UserDTO } from '../../service/user/user.service';
+import { UserService, UserDTO } from '../../core/service/user/user.service';
 import { NgIf } from '@angular/common';
-import { AuthService } from '../../service/user/auth/auth.service';
-import { LoginResponse } from '../../service/user/auth/auth.service';
+import { AuthService } from '../../core/service/user/auth/auth.service';
+import { LoginResponse } from '../../core/service/user/auth/auth.service';
 
 @Component({
   selector: 'app-login',

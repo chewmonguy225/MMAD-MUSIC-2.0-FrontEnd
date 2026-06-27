@@ -1,18 +1,8 @@
 <!-- SEARCH BAR -->
 <div class="search-bar">
-  <input
-    type="text"
-    [value]="searchQuery"
-    (input)="onSearchInput($event)"
-    placeholder="Search artists..."
-  />
+  <input type="text" [value]="searchQuery" (input)="onSearchInput($event)" placeholder="Search artists..." />
 
-  <button
-    type="button"
-    class="clear-btn"
-    (click)="searchQuery = ''"
-    aria-label="Clear search input"
-  >
+  <button type="button" class="clear-btn" (click)="searchQuery = ''" aria-label="Clear search input">
     ×
   </button>
 </div>
@@ -23,7 +13,7 @@
   <div class="item-list">
 
     <ng-container *ngFor="let item of displayedItems">
-      <app-artist [item]="item"></app-artist>
+      <app-artist [item]="item" (click)="selectItem(item)"></app-artist>
     </ng-container>
 
   </div>
@@ -31,11 +21,7 @@
   <!-- PAGINATION -->
   <div class="pagination-controls">
 
-    <button
-      type="button"
-      (click)="prevPage()"
-      [disabled]="currentPage === 1"
-    >
+    <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">
       Previous
     </button>
 
@@ -43,11 +29,7 @@
       Page {{ currentPage }} of {{ getTotalPages() }}
     </span>
 
-    <button
-      type="button"
-      (click)="nextPage()"
-      [disabled]="currentPage * itemsPerPage >= results.length"
-    >
+    <button type="button" (click)="nextPage()" [disabled]="currentPage * itemsPerPage >= results.length">
       Next
     </button>
 

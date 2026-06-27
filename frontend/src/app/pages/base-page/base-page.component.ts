@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { RouterOutlet } from '@angular/router';
-import { UserDTO } from '../../logic/service/user/user.service';
-import { AuthService } from '../../logic/service/user/auth/auth.service';
+import { UserDTO } from '../../core/service/user/user.service';
+import { AuthService } from '../../core/service/user/auth/auth.service';
 
 @Component({
   selector: 'app-base-page',

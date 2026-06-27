@@ -1,5 +1,5 @@
-import { UserDTO } from "../service/user/user.service";
-import { Item } from "./item/item.type";
+import { UserDTO } from "../../service/user/user.service";
+import { Item } from "../item/item.type";
 
 export interface Review {
   id: number;

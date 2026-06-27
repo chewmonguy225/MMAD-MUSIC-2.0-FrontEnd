@@ -48,12 +48,7 @@
     <app-search-bar *ngIf="searchActive"></app-search-bar>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
-    <div class="modal-box" (click)="$event.stopPropagation()">
-        <button class="modal-close" (click)="closeModal()">×</button>
-        <h2>Add Content</h2>
-        <p>Select what you want to add</p>
-        <button (click)="closeModal()">Close</button>
-    </div>
-</div>
+<app-review-builder
+  [isOpen]="isModalOpen"
+  (isOpenChange)="isModalOpen = $event">
+</app-review-builder>

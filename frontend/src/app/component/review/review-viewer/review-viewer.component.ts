@@ -2,10 +2,10 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReviewService } from '../../../service/review/review.service';
-import { Review } from '../../../model/review.type';
+import { ReviewService } from '../../../core/service/review/review.service';
+import { Review } from '../../../core/model/review/review.type';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Item } from '../../../model/item/item.type';
+import { Item } from '../../../core/model/item/item.type';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 
 @Component({

@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Review } from '../../../model/review.type';
-import { Artist } from '../../../model/item/artist.type';
-import { Item } from '../../../model/item/item.type';
+import { Review } from '../../../core/model/review/review.type';
+import { Artist } from '../../../core/model/item/artist.type';
+import { Item } from '../../../core/model/item/item.type';
 
 @Component({
   selector: 'app-review-card',

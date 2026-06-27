@@ -4,12 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { BasePageComponent } from '../base-page/base-page.component';
-import { ReviewViewerComponent } from '../../logic/component/review/review-viewer/review-viewer.component';
-import { Review } from '../../logic/model/review.type';
-import { ReviewService } from '../../logic/service/review/review.service';
-import { AuthService } from '../../logic/service/user/auth/auth.service';
-import { UserDTO, UserService } from '../../logic/service/user/user.service';
-import { UserListDialogComponent } from '../../logic/component/user-list-dialog/user-list-dialog.component';
+import { ReviewViewerComponent } from '../../component/review/review-viewer/review-viewer.component';
+import { Review } from '../../core/model/review/review.type';
+import { ReviewService } from '../../core/service/review/review.service';
+import { AuthService } from '../../core/service/user/auth/auth.service';
+import { UserDTO, UserService } from '../../core/service/user/user.service';
+import { UserListDialogComponent } from '../../component/user-list-dialog/user-list-dialog.component';
 
 @Component({
   selector: 'app-profile-page',

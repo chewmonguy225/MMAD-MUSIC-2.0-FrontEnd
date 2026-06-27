@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './logic/component/login/login.component';
+import { LoginComponent } from './component/login/login.component';
 import { BasePageComponent } from './pages/base-page/base-page.component';
-import { authGuard } from './logic/guard/auth.guard'; // Ensure correct path to your guard
+import { authGuard } from './core/guard/auth.guard'; // Ensure correct path to your guard
 import { HomePageComponent } from './pages/home-page/home-page.component';
-import { SearchBarComponent } from './logic/component/search-bar/search-bar.component';
+import { SearchBarComponent } from './component/search-bar/search-bar.component';
 import { ExplorePageComponent } from './pages/explore-page/explore-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { ItemPageComponent } from './pages/item-page/item-page.component';
 export const routes: Routes = [
     {
         // This route will now try to go to the dashboard first.
@@ -38,7 +39,11 @@ export const routes: Routes = [
     {
         path: 'profile/:username',
         component: ProfilePageComponent
-      }
-      
+    },
+    {
+        path: 'item/:sourceId',
+        component: ItemPageComponent
+    }
+
 
 ];

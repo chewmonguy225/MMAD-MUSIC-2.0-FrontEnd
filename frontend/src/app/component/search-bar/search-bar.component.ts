@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { Artist } from '../../model/item/artist.type';
-import { Item } from '../../model/item/item.type';
-import { UserDTO } from '../../service/user/user.service';
+import { Artist } from '../../core/model/item/artist.type';
+import { Item } from '../../core/model/item/item.type';
+import { UserDTO } from '../../core/service/user/user.service';
 
-import { SearchService } from '../../service/search/search.service';
-import { UserService } from '../../service/user/user.service';
+import { SearchService } from '../../core/service/search/search.service';
+import { UserService } from '../../core/service/user/user.service';
 
 import { ArtistComponent } from '../item/artist/artist.component';
 import { UserCardComponent } from '../user-card/user-card.component';
@@ -24,7 +24,7 @@ import { UserCardComponent } from '../user-card/user-card.component';
   styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit {
-
+  @Output() itemSelected = new EventEmitter<Item>();
   private searchSubject = new Subject<string>();
   searchQuery: string = '';
 
@@ -87,6 +87,7 @@ export class SearchBarComponent implements OnInit {
 
         this.currentPage = 1;
         this.updateDisplayedItems();
+
       },
 
       error: (err) => {
@@ -124,5 +125,9 @@ export class SearchBarComponent implements OnInit {
   // TYPE GUARDS
   isArtist(item: Item): item is Artist {
     return this.searchType === 'artist';
+  }
+
+  selectItem(item: Item): void {
+    this.itemSelected.emit(item);
   }
 }

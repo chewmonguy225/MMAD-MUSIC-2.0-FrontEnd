@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ReviewViewerComponent } from '../../logic/component/review/review-viewer/review-viewer.component';
+import { ReviewViewerComponent } from '../../component/review/review-viewer/review-viewer.component';
 import { BasePageComponent } from '../base-page/base-page.component';
-import { AuthService } from '../../logic/service/user/auth/auth.service';
-import { ReviewService } from '../../logic/service/review/review.service';
-import { Review } from '../../logic/model/review.type';
+import { AuthService } from '../../core/service/user/auth/auth.service';
+import { ReviewService } from '../../core/service/review/review.service';
+import { Review } from '../../core/model/review/review.type';
 
 @Component({
   selector: 'app-home',

@@ -1,0 +1,121 @@
+/* =========================
+   ITEM CARD (HORIZONTAL)
+   ========================= */
+   .item-card {
+    background-color: #ff95003d;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 8px;
+  
+    display: flex;
+    flex-direction: row; /* horizontal layout */
+    align-items: center;
+    gap: 16px;
+  
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+  
+    transition: 0.2s ease;
+  }
+  
+  .item-card:hover {
+    background-color: #ff950055;
+    transform: translateY(-2px);
+  }
+  
+  
+  /* =========================
+     IMAGE
+     ========================= */
+  .image-container {
+    width: 90px;
+    height: 90px;
+  
+    border-radius: 50%;
+    overflow: hidden;
+  
+    flex-shrink: 0;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    background-color: #333;
+  }
+  
+  .item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+  }
+  
+  
+  /* =========================
+     TEXT CONTENT
+     ========================= */
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    flex: 1;
+  }
+  
+  .item-name {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    word-break: break-word;
+  }
+  
+  
+  /* =========================
+     BUTTON AREA
+     ========================= */
+  .listen-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
+  
+  .spotify-button {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 20px;
+  
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+  
+    cursor: pointer;
+  
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  
+    transition: background-color 0.3s ease;
+  }
+  
+  .spotify-button:hover {
+    background-color: #1ed760;
+  }
+  
+  
+  /* =========================
+     LIST WRAPPER (SEARCH RESULTS)
+     ========================= */
+  .item-list {
+    display: flex;
+    flex-direction: column; /* IMPORTANT: vertical list now */
+    align-items: center;
+    gap: 12px;
+  
+    padding: 20px;
+  }

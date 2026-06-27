@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BasePageComponent } from '../base-page/base-page.component';
-import { SearchBarComponent } from '../../logic/component/search-bar/search-bar.component';
+import { SearchBarComponent } from '../../component/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-explore-page',

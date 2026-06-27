@@ -1,15 +1,16 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../../logic/service/user/auth/auth.service';
+import { AuthService } from '../../../core/service/user/auth/auth.service';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SearchBarComponent } from '../../../logic/component/search-bar/search-bar.component';
+import { SearchBarComponent } from '../../../component/search-bar/search-bar.component';
+import { ReviewBuilderComponent } from '../../../component/review/review-builder/review-builder.component';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgIf, FormsModule, SearchBarComponent],  // <-- Add NgIf here
+  imports: [RouterLink, RouterLinkActive, NgIf, FormsModule, SearchBarComponent, ReviewBuilderComponent],  // <-- Add NgIf here
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

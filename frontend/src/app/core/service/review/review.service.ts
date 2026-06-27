@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ReviewPostRequestPayload } from '../../model/review/reviewPostRequestPayload.type';
 
-import { Review } from '../../model/review.type';
+import { Review } from '../../model/review/review.type';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,13 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
+  //Create
+  createReview(review: ReviewPostRequestPayload){
+    return this.http.post<Review>(
+      `${this.apiUrl}/add`,
+      review
+    );
+  }
 
   getReviewById(id: number): Observable<Review> {
     if (id <= 0) {
