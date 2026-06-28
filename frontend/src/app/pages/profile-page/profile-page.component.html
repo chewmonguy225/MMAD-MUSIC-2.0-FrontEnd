@@ -12,5 +12,10 @@
     </span>
   </p>
 
-  <app-review-viewer [reviews]="reviews"></app-review-viewer>
+  <app-base-page>
+    <app-review-viewer [reviews]="reviews ?? []" 
+        [isLoading]="isLoading" 
+        [errorMessage]="errorMessage"
+        (refresh)="loadUserReviews()"></app-review-viewer>
+</app-base-page>
 </app-base-page>

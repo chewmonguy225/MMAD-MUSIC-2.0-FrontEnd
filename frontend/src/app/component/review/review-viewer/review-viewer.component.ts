@@ -1,47 +1,39 @@
-// src/app/component/review-viewer/review-viewer.component.ts
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReviewService } from '../../../core/service/review/review.service';
+
 import { Review } from '../../../core/model/review/review.type';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Item } from '../../../core/model/item/item.type';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 
 @Component({
   selector: 'app-review-viewer',
   standalone: true,
-  imports: [CommonModule, ReviewCardComponent],
+  imports: [
+    CommonModule,
+    ReviewCardComponent
+  ],
   templateUrl: './review-viewer.component.html',
-  styleUrl: './review-viewer.component.css'
+  styleUrls: ['./review-viewer.component.css']
 })
-export class ReviewViewerComponent{
-  review: Review | null = null;
-  item: Item | null = null;
+export class ReviewViewerComponent {
 
-  @Input() reviews: Review[] | null = null;
-  isLoading: boolean = false;
-  errorMessage: string | null = null;
+  // -------------------------
+  // INPUTS (DATA ONLY)
+  // -------------------------
+  @Input() reviews: Review[] = [];
+  @Input() title: string = 'Reviews';
+  @Input() isLoading: boolean = false;
+  @Input() errorMessage: string = '';
 
-  constructor(private reviewService: ReviewService) { }
+  // -------------------------
+  // OPTIONAL: REFRESH ACTION (controlled by parent)
+  // -------------------------
+  @Input() showRefresh: boolean = false;
+  @Output() refresh = new EventEmitter<void>();
 
-
-  // --- END OF MAPPING FUNCTION ---
-
-
-  viewAll(): void {
-    this.reviewService.getAllReviews().subscribe({
-      next: (reviews: Review[]) => {
-        this.reviews = reviews;
-        console.log('Reviews loaded:', this.reviews);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Failed to load reviews:', error);
-      },
-      complete: () => {
-        // optional cleanup logic
-      }
-    });
+  // -------------------------
+  // UI ACTIONS
+  // -------------------------
+  onRefresh(): void {
+    this.refresh.emit();
   }
-  
 }

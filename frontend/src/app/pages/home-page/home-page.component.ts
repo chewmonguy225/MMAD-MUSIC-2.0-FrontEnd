@@ -13,11 +13,14 @@ import { Review } from '../../core/model/review/review.type';
     ReviewViewerComponent
   ],
   templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css'
+  styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent extends BasePageComponent implements OnInit {
 
-  reviews: Review[] | null = null;
+  reviews: Review[] = [];
+
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private reviewService: ReviewService,
@@ -29,14 +32,27 @@ export class HomePageComponent extends BasePageComponent implements OnInit {
   override ngOnInit(): void {
     super.ngOnInit?.();
 
+    this.loadReviews();
+  }
+
+  loadReviews(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
     this.reviewService.getAllReviews().subscribe({
       next: (plainReviews: Review[]) => {
-        // ✅ NO transformation needed anymore
-        this.reviews = plainReviews;
+        this.reviews = plainReviews ?? []; // extra safety
+        this.isLoading = false;
 
-        console.log('User reviews received:', this.reviews);
+        console.log('Reviews received:', this.reviews);
       },
-      error: (err) => console.error('Failed to load user reviews:', err)
+
+      error: (err) => {
+        console.error('Failed to load reviews:', err);
+        this.errorMessage = 'Failed to load reviews';
+        this.reviews = []; // prevent UI crash
+        this.isLoading = false;
+      }
     });
   }
 }

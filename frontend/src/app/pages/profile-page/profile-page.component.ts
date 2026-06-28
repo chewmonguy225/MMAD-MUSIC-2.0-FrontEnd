@@ -21,17 +21,19 @@ import { UserListDialogComponent } from '../../component/user-list-dialog/user-l
 export class ProfilePageComponent extends BasePageComponent implements OnInit {
 
   reviews: Review[] | null = null;
-  override user: UserDTO | null = null; // Profile user being viewed
+  override user: UserDTO | null = null;
   isFollowing = false;
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private reviewService: ReviewService,
     private userService: UserService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    authService: AuthService // <-- Make this private for use below
+    authService: AuthService
   ) {
-    super(authService); // Gives access to logged-in user via `this.loggedInUser`
+    super(authService);
   }
 
   override ngOnInit(): void {
@@ -50,23 +52,41 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
       next: user => {
         this.user = user;
 
-        this.updateFollowingStatus(); // Check follow status whenever profile loads
+        this.updateFollowingStatus();
 
-        this.reviewService.getUserReviews(username).subscribe({
-          next: (reviews: Review[]) => {
-            this.reviews = reviews;
-          },
-          error: err => console.error('Failed to load reviews:', err)
-        });
+        // 👉 ADDED: ensure reviews load immediately
+        this.loadUserReviews();
       },
       error: err => console.error('Failed to load user:', err)
+    });
+  }
+
+  // =========================
+  // 🔥 ADDED FIXED METHOD
+  // =========================
+  loadUserReviews(): void {
+    const username = this.user?.username || this.authService.getCurrentUser()?.username;
+
+    if (!username) return;
+
+    this.isLoading = true;
+
+    this.reviewService.getUserReviews(username).subscribe({
+      next: (res) => {
+        this.reviews = res ?? [];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Failed to load user reviews';
+        this.isLoading = false;
+        this.reviews = [];
+      }
     });
   }
 
   private updateFollowingStatus(): void {
     const loggedInUser = this.authService.getCurrentUser();
     if (loggedInUser && this.user) {
-      // Assuming following is an array of UserDTO or objects with username
       this.isFollowing = loggedInUser.following?.some(f => f === this.user!.username) ?? false;
     } else {
       this.isFollowing = false;
@@ -80,7 +100,6 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
     this.userService.followUser(loggedInUser.username, this.user.username).subscribe({
       next: () => {
         this.isFollowing = true;
-        // Optionally update the logged-in user's following list locally
         loggedInUser.following = loggedInUser.following || [];
         loggedInUser.following.push(this.user!.username);
       },
@@ -95,8 +114,10 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
     this.userService.unfollowUser(loggedInUser.username, this.user.username).subscribe({
       next: () => {
         this.isFollowing = false;
+
         if (loggedInUser.following) {
-          loggedInUser.following = loggedInUser.following.filter(f => f!== this.user!.username);
+          loggedInUser.following =
+            loggedInUser.following.filter(f => f !== this.user!.username);
         }
       },
       error: err => console.error('Failed to unfollow user:', err)
@@ -108,5 +129,4 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
       data: { title, users }
     });
   }
-  
 }

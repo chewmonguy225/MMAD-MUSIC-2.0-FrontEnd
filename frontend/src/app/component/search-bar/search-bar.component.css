@@ -145,3 +145,8 @@
   min-width: 120px;
   text-align: center;
 }
+
+.scroll-container {
+  height: 400px;
+  overflow-y: auto;
+}
