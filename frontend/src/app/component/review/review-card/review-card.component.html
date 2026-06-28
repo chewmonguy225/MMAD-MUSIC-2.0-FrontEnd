@@ -1,6 +1,7 @@
 <div class="review" *ngIf="review">
+
   <!-- ARTIST -->
-  <div *ngIf="artist as a" class="review-row" [class.artist]="true">
+  <div *ngIf="review.item as a" class="review-row artist">
 
     <!-- IMAGE -->
     <div class="review-image">
@@ -19,9 +20,11 @@
       </span>
 
       <div class="body-middle">
-
-        <body> {{review.description}} </body>
+        <div class="description">
+          {{ review.description }}
+        </div>
       </div>
+
     </div>
 
   </div>

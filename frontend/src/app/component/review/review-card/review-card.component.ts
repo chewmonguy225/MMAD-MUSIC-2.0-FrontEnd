@@ -20,7 +20,7 @@ export class ReviewCardComponent {
   // TYPE GUARD
   // -------------------------
   isArtist(item: Item): item is Artist {
-    return item.type === 'ARTIST';
+    return item.type === 'artist';
   }
 
   // -------------------------

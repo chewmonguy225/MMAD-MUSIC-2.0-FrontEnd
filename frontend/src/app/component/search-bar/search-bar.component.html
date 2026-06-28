@@ -13,7 +13,9 @@
   <div class="item-list">
 
     <ng-container *ngFor="let item of displayedItems">
-      <app-artist [item]="item" (click)="selectItem(item)"></app-artist>
+      <div (click)="selectItem(item)">
+        <app-artist [item]="item"></app-artist>
+      </div>
     </ng-container>
 
   </div>

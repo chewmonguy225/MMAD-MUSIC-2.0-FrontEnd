@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Item } from '../../../core/model/item/item.type';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
 import { ReviewService } from '../../../core/service/review/review.service';
-
+import { AuthService } from '../../../core/service/user/auth/auth.service';
 @Component({
   selector: 'app-review-builder',
   standalone: true,
@@ -32,8 +32,9 @@ export class ReviewBuilderComponent {
   selectedItem: Item | null = null;
   rating = 0;
   text = '';
+  errorMessage: string = '';
 
-  constructor(private reviewService: ReviewService) {}
+  constructor(private reviewService: ReviewService, private authService: AuthService) {}
 
   // -------------------------
   // CLOSE MODAL
@@ -73,8 +74,14 @@ export class ReviewBuilderComponent {
   submit(): void {
     if (!this.selectedItem) return;
 
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.errorMessage = 'You must be logged in to post a review';
+      return;
+    }
+    
     const payload = {
-      username: 'CURRENT_USER', // replace with AuthService later
+      username: currentUser.username,
       itemId: this.selectedItem.id!,
       rating: this.rating,
       description: this.text

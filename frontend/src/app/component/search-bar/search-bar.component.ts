@@ -5,13 +5,12 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Artist } from '../../core/model/item/artist.type';
 import { Item } from '../../core/model/item/item.type';
-import { UserDTO } from '../../core/service/user/user.service';
 
 import { SearchService } from '../../core/service/search/search.service';
 import { UserService } from '../../core/service/user/user.service';
+import { ArtistService } from '../../core/service/item/artist/artist.service';
 
 import { ArtistComponent } from '../item/artist/artist.component';
-import { UserCardComponent } from '../user-card/user-card.component';
 
 @Component({
   selector: 'app-search-bar',
@@ -24,7 +23,9 @@ import { UserCardComponent } from '../user-card/user-card.component';
   styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit {
+
   @Output() itemSelected = new EventEmitter<Item>();
+
   private searchSubject = new Subject<string>();
   searchQuery: string = '';
 
@@ -41,8 +42,9 @@ export class SearchBarComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private userService: UserService
-  ) { }
+    private userService: UserService,
+    private artistService: ArtistService
+  ) {}
 
   ngOnInit(): void {
     this.searchSubject.pipe(
@@ -84,10 +86,9 @@ export class SearchBarComponent implements OnInit {
         const artists = response?.artists ?? [];
 
         this.results = artists;
-
         this.currentPage = 1;
-        this.updateDisplayedItems();
 
+        this.updateDisplayedItems();
       },
 
       error: (err) => {
@@ -122,12 +123,29 @@ export class SearchBarComponent implements OnInit {
     return Math.ceil(this.results.length / this.itemsPerPage);
   }
 
-  // TYPE GUARDS
+  // TYPE GUARD
   isArtist(item: Item): item is Artist {
     return this.searchType === 'artist';
   }
 
+  // ⭐ KEY FIX: persist before emitting
   selectItem(item: Item): void {
+
+    if (item.type === 'artist') {
+
+      this.artistService.addArtist(item as Artist).subscribe({
+        next: (savedArtist) => {
+          console.log('✅ Saved artist:', savedArtist);
+          this.itemSelected.emit(savedArtist);
+        },
+        error: (err) => {
+          console.error('❌ Failed to save artist:', err);
+        }
+      });
+
+      return;
+    }
+
     this.itemSelected.emit(item);
   }
 }
