@@ -1,0 +1,35 @@
+.item-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  
+    padding: 24px;
+    margin-bottom: 32px;
+  
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .item-image {
+    width: 180px;
+    height: 180px;
+  
+    object-fit: cover;
+  
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .item-info h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #222;
+  }

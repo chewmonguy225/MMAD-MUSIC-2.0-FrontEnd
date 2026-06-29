@@ -11,6 +11,7 @@ import { UserService } from '../../core/service/user/user.service';
 import { ArtistService } from '../../core/service/item/artist/artist.service';
 
 import { ArtistComponent } from '../item/artist/artist.component';
+import { ItemService } from '../../core/service/item/item/item.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -43,7 +44,7 @@ export class SearchBarComponent implements OnInit {
   constructor(
     private searchService: SearchService,
     private userService: UserService,
-    private artistService: ArtistService
+    private itemService: ItemService
   ) {}
 
   ngOnInit(): void {
@@ -132,8 +133,8 @@ export class SearchBarComponent implements OnInit {
   selectItem(item: Item): void {
 
     if (item.type === 'artist') {
-
-      this.artistService.addArtist(item as Artist).subscribe({
+      console.log(item);
+      this.itemService.addItem(item as Artist).subscribe({
         next: (savedArtist) => {
           console.log('✅ Saved artist:', savedArtist);
           this.itemSelected.emit(savedArtist);

@@ -4,6 +4,8 @@ import { BasePageComponent } from '../base-page/base-page.component';
 import { AuthService } from '../../core/service/user/auth/auth.service';
 import { ReviewService } from '../../core/service/review/review.service';
 import { Review } from '../../core/model/review/review.type';
+import { UiService } from '../../core/service/ui/ui.service';
+import { ReviewCardComponent } from '../../component/review/global-review-card/review-card.component';
 
 @Component({
   selector: 'app-home',
@@ -18,15 +20,16 @@ import { Review } from '../../core/model/review/review.type';
 export class HomePageComponent extends BasePageComponent implements OnInit {
 
   reviews: Review[] = [];
-
+  cardComponent = "ReviewCardComponent";
   isLoading: boolean = false;
   errorMessage: string = '';
 
   constructor(
     private reviewService: ReviewService,
-    authService: AuthService
+    authService: AuthService,
+    ui: UiService
   ) {
-    super(authService);
+    super(authService, ui);
   }
 
   override ngOnInit(): void {

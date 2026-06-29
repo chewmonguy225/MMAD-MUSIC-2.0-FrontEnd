@@ -1,11 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { Item } from '../../../core/model/item/item.type';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
 import { ReviewService } from '../../../core/service/review/review.service';
 import { AuthService } from '../../../core/service/user/auth/auth.service';
+import { UiService } from '../../../core/service/ui/ui.service';
+
 @Component({
   selector: 'app-review-builder',
   standalone: true,
@@ -13,35 +16,50 @@ import { AuthService } from '../../../core/service/user/auth/auth.service';
   templateUrl: './review-builder.component.html',
   styleUrl: './review-builder.component.css'
 })
-export class ReviewBuilderComponent {
+export class ReviewBuilderComponent implements OnInit, OnDestroy {
 
   // -------------------------
-  // MODAL CONTROL (parent sync)
+  // STATE
   // -------------------------
-  @Input() isOpen = false;
-  @Output() isOpenChange = new EventEmitter<boolean>();
+  isOpen = false;
 
-  // -------------------------
-  // STEP FLOW
-  // -------------------------
   step: 'search' | 'rate' | 'text' = 'search';
 
-  // -------------------------
-  // REVIEW STATE
-  // -------------------------
   selectedItem: Item | null = null;
   rating = 0;
   text = '';
-  errorMessage: string = '';
+  errorMessage = '';
 
-  constructor(private reviewService: ReviewService, private authService: AuthService) {}
+  private sub?: Subscription;
 
-  // -------------------------
-  // CLOSE MODAL
-  // -------------------------
+  constructor(
+    private reviewService: ReviewService,
+    private authService: AuthService,
+    private ui: UiService
+  ) {}
+
+  ngOnInit(): void {
+    this.sub = this.ui.reviewOpen$.subscribe(open => {
+      this.isOpen = open;
+
+      if (open) {
+        this.reset();
+
+        const item = this.ui.selectedItem;
+        if (item) {
+          this.selectedItem = item;
+          this.step = 'rate'; // skip search
+        }
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+  }
+
   close(): void {
-    this.isOpen = false;
-    this.isOpenChange.emit(false);
+    this.ui.closeReviewBuilder();
     this.reset();
   }
 
@@ -50,53 +68,39 @@ export class ReviewBuilderComponent {
     this.selectedItem = null;
     this.rating = 0;
     this.text = '';
+    this.errorMessage = '';
   }
 
-  // -------------------------
-  // ITEM SELECTED FROM SEARCH
-  // -------------------------
   selectItem(item: Item): void {
     this.selectedItem = item;
     this.step = 'rate';
   }
 
-  // -------------------------
-  // STAR RATING
-  // -------------------------
   setRating(star: number): void {
     this.rating = star;
     this.step = 'text';
   }
 
-  // -------------------------
-  // SUBMIT REVIEW
-  // -------------------------
   submit(): void {
     if (!this.selectedItem) return;
-
+    
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
       this.errorMessage = 'You must be logged in to post a review';
       return;
     }
-    
+
     const payload = {
       username: currentUser.username,
       itemId: this.selectedItem.id!,
       rating: this.rating,
       description: this.text
     };
-
-    console.log('🚀 Review payload:', payload);
-
+    
+    
     this.reviewService.createReview(payload).subscribe({
-      next: (res) => {
-        console.log('✅ Review saved:', res);
-        this.close();
-      },
-      error: (err) => {
-        console.error('❌ Failed to save review:', err);
-      }
+      next: () => this.close(),
+      error: (err) => console.error('Failed to save review:', err)
     });
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReviewPostRequestPayload } from '../../model/review/reviewPostRequestPayload.type';
+import { ItemReviewsResponse } from '../../model/review/ItemReviewsResponse';
 
 import { Review } from '../../model/review/review.type';
 
@@ -12,10 +13,10 @@ export class ReviewService {
 
   private apiUrl = 'http://localhost:8080/reviews';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   //Create
-  createReview(review: ReviewPostRequestPayload){
+  createReview(review: ReviewPostRequestPayload) {
     return this.http.post<Review>(
       `${this.apiUrl}/add`,
       review
@@ -35,5 +36,9 @@ export class ReviewService {
 
   getUserReviews(username: string): Observable<Review[]> {
     return this.http.get<Review[]>(`${this.apiUrl}/user/${username}`);
+  }
+
+  getReviewsByItemId(id: number): Observable<ItemReviewsResponse> {
+    return this.http.get<ItemReviewsResponse>(`${this.apiUrl}/item/${id}`);
   }
 }

@@ -5,6 +5,7 @@ import { Item } from '../../../model/item/item.type';
 import { Artist } from '../../../model/item/artist.type';
 
 import { ArtistService } from '../artist/artist.service';
+import { BehaviorSubject } from 'rxjs';
 
 
 type SpecificItemInstance = Artist //| Song | Album;
@@ -14,20 +15,22 @@ type ItemTypeName = 'ARTIST' | 'SONG' | 'ALBUM'; // Still use string literals fo
   providedIn: 'root'
 })
 export class ItemService {
+
   protected apiUrl = 'http://localhost:8080/item';
 
-  constructor(
-    protected http: HttpClient,
-  ) { }
+  constructor(private http: HttpClient) {}
 
-  //CREATE
-
-  //READ
-  getItemById(id: number): Observable<Item> {
-    return this.http.get<Item>(`${this.apiUrl}/${id}`);
+  // CREATE
+  addItem(item: Item): Observable<Item> {
+    return this.http.post<Item>(`${this.apiUrl}/${item.type + 's'}/add`, item);
   }
 
-  getItemBySourceId(sourceId: number): Observable<Item> {
+  // READ
+  getItemById(id: number): Observable<Item> {
+    return this.http.get<Item>(`${this.apiUrl}/find/${id}`);
+  }
+
+  getItemBySourceId(sourceId: string): Observable<Item> {
     return this.http.get<Item>(`${this.apiUrl}/findSource/${sourceId}`);
   }
 
@@ -35,20 +38,8 @@ export class ItemService {
     return this.http.get<Item[]>(this.apiUrl);
   }
 
-  //UPDATE
-
-  //DELETE
+  // DELETE
   deleteItem(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
-
-  //SEARCH EXTERNAL
-  // Corresponds to backend: GET /spotify/search/artist/{artistName}
-  // public searchItem(artistName: string): Observable<Artist[]> {
-  //   // return this.http.get<any[]>(`${this.searchUrl}/${artistName}`).pipe(
-  //   // //   map(response =>
-  //   // //     response.map((data: any) => this.mapToArtist(data))
-  //   // //   )
-  //   // // );
-  // }
 }

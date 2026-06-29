@@ -70,20 +70,30 @@ nav i {
 
 .search-panel {
   position: fixed;
+  z-index: 2000;
   top: 0;
   left: 80px;
-  /* adjust as needed */
   height: 100vh;
   width: 400px;
   background: white;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
   padding: 1rem;
-  display: none;
+
+  display: flex;
   flex-direction: column;
+
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+
+  transition: all 180ms ease;
 }
 
+/* ACTIVE STATE */
 .search-panel.visible {
-  display: flex;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Wrapper to hold input and button */

@@ -16,11 +16,6 @@
 
         <!-- Explore -->
         <a routerLink="/explore" routerLinkActive="active-link" title="Explore">
-            <i class="fa fa-compass"></i>
-        </a>
-
-        <!-- Search -->
-        <a title="Search" (click)="toggleSearch()" [class.active-link]="searchActive" role="button" tabindex="0">
             <i class="fa fa-search"></i>
         </a>
 
@@ -42,13 +37,3 @@
     </nav>
 
 </header>
-
-<!-- SEARCH -->
-<div class="search-panel" [class.visible]="searchActive">
-    <app-search-bar *ngIf="searchActive"></app-search-bar>
-</div>
-
-<app-review-builder
-  [isOpen]="isModalOpen"
-  (isOpenChange)="isModalOpen = $event">
-</app-review-builder>

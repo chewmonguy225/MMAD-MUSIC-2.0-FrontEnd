@@ -10,7 +10,7 @@ import { ReviewService } from '../../core/service/review/review.service';
 import { AuthService } from '../../core/service/user/auth/auth.service';
 import { UserDTO, UserService } from '../../core/service/user/user.service';
 import { UserListDialogComponent } from '../../component/user-list-dialog/user-list-dialog.component';
-
+import { UiService } from '../../core/service/ui/ui.service';
 @Component({
   selector: 'app-profile-page',
   standalone: true,
@@ -31,9 +31,10 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
     private userService: UserService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    authService: AuthService
+    authService: AuthService,
+    ui: UiService
   ) {
-    super(authService);
+    super(authService, ui);
   }
 
   override ngOnInit(): void {

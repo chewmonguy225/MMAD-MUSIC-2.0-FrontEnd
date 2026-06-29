@@ -1,21 +1,26 @@
 import { Component, Input } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { RouterOutlet } from '@angular/router';
 import { UserDTO } from '../../core/service/user/user.service';
 import { AuthService } from '../../core/service/user/auth/auth.service';
-
+import { UiService } from '../../core/service/ui/ui.service';
+import { ReviewBuilderComponent } from '../../component/review/review-builder/review-builder.component';
 @Component({
   selector: 'app-base-page',
-  imports: [ 
+  imports: [
     RouterOutlet,
+    AsyncPipe,
     HeaderComponent,
-  ],
+    ReviewBuilderComponent
+],
   templateUrl: './base-page.component.html',
   styleUrl: './base-page.component.css'
 })
 
 export class BasePageComponent {
-  constructor(protected authService: AuthService){}
+  constructor(protected authService: AuthService, public ui: UiService){
+  }
 
   user: UserDTO | null = null;
   

@@ -1,0 +1,29 @@
+.review-card {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+  }
+  
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  
+  .username {
+    font-weight: 600;
+  }
+  
+  .rating {
+    color: gold;
+  }
+  
+  .review-body {
+    margin: 8px 0;
+  }
+  
+  .review-footer {
+    font-size: 12px;
+    color: gray;
+  }

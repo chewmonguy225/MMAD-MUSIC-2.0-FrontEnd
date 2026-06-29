@@ -41,7 +41,7 @@ export const routes: Routes = [
         component: ProfilePageComponent
     },
     {
-        path: 'item/:sourceId',
+        path: 'item/:id',
         component: ItemPageComponent
     }
 

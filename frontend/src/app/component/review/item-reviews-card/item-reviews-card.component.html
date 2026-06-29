@@ -1,0 +1,26 @@
+<div class="review-card">
+
+    <!-- Header -->
+    <div class="review-header">
+      <div class="username">
+        {{ review.username }}
+      </div>
+  
+      <div class="rating">
+        <span *ngFor="let star of stars">⭐</span>
+      </div>
+    </div>
+  
+    <!-- Description -->
+    <div class="review-body">
+      {{ review.description }}
+    </div>
+  
+    <!-- Footer -->
+    <div class="review-footer">
+      <small class="date">
+        {{ review.createdAt | date:'mediumDate' }}
+      </small>
+    </div>
+  
+  </div>

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ItemComponent } from '../item.component';
-import { ItemService } from '../../../core/service/item/item/item.service';
+import { ArtistService } from '../../../core/service/item/artist/artist.service';
+import { Artist } from '../../../core/model/item/artist.type';
 import { Router } from '@angular/router';
+import { ItemService } from '../../../core/service/item/item/item.service';
 
 @Component({
   selector: 'app-artist',

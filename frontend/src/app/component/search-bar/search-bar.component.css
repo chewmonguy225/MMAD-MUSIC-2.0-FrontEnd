@@ -100,8 +100,7 @@
 /* Result list styling */
 .item-list {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   gap: 20px;
   padding: 20px;
   box-sizing: border-box;

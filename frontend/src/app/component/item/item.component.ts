@@ -23,14 +23,8 @@ export abstract class ItemComponent {
   constructor(
     protected itemService: ItemService,
     protected router: Router
-  ) {}
+  ) { }
 
   abstract onSpotifyClick(): void;
 
-  // ✅ ADD THIS
-  navigateToItemPage(): void {
-    if (!this.item) return;
-
-    this.router.navigate(['/item', this.item.sourceId]);
-  }
 }
