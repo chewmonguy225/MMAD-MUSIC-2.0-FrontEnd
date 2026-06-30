@@ -24,10 +24,30 @@ export class ReviewCardComponent {
   }
 
   // -------------------------
+  // TYPE HELPERS
+  // -------------------------
+  isAlbum(item: Item): boolean {
+    return item.type === 'album';
+  }
+
+  // -------------------------
   // GETTERS
   // -------------------------
+
+  get item(): Item | null {
+    return this.review?.item ?? null;
+  }
+
   get itemType(): string {
     return this.review?.item?.type || '';
+  }
+
+  get itemName(): string {
+    return this.review?.item?.name || '';
+  }
+
+  get itemImage(): string {
+    return this.review?.item?.imageURL || '';
   }
 
   get artist(): Artist | null {

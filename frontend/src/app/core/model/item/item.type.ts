@@ -3,5 +3,5 @@ export interface Item {
     sourceId: string;
     name: string;
     imageURL: string;
-    type: 'artist' | 'album' | 'song';
+    type: 'artist' | 'album' | 'song' | 'user';
   }

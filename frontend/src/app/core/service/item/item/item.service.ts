@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, forkJoin } from 'rxjs'; // Import throwError, forkJoin
 import { Item } from '../../../model/item/item.type';
 import { Artist } from '../../../model/item/artist.type';
-
-import { ArtistService } from '../artist/artist.service';
-import { BehaviorSubject } from 'rxjs';
+import { Album } from '../../../model/item/album.type';
 
 
-type SpecificItemInstance = Artist //| Song | Album;
-type ItemTypeName = 'ARTIST' | 'SONG' | 'ALBUM'; // Still use string literals for retrieval/deletion by type
+
+
+type SpecificItemInstance = Artist | Album; //song;
+type ItemTypeName = 'ARTIST' | 'SONG' | 'ALBUM'; 
 
 @Injectable({
   providedIn: 'root'

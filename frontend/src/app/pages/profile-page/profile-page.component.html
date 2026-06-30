@@ -13,8 +13,10 @@
   </p>
 
   <app-base-page>
-    <app-review-viewer [reviews]="reviews ?? []" 
+    <app-review-viewer
+        [reviews]="reviews ?? []" 
         [isLoading]="isLoading" 
+        [cardComponent]="cardComponent"
         [errorMessage]="errorMessage"
         (refresh)="loadUserReviews()"></app-review-viewer>
 </app-base-page>

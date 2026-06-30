@@ -1,17 +1,24 @@
 <div class="review" *ngIf="review">
 
-  <!-- ARTIST -->
-  <div *ngIf="review.item as a" class="review-row artist">
+  <div *ngIf="review.item as item" class="review-row">
 
     <!-- IMAGE -->
-    <div class="review-image">
-      <img [src]="a.imageURL" alt="{{ a.name }}" />
+    <div *ngIf="review.item as item" class="review-image">
+
+      <!-- IMAGE -->
+      <div class="review-image">
+
+        <img [src]="item.imageURL" [alt]="item.name" [class.circle]="item.type === 'artist'"
+          [class.square]="item.type === 'album'" />
+
+      </div>
+
     </div>
 
     <div class="review-body">
 
       <div class="body-top">
-        <h1 class="artist-name">{{ a.name }}</h1>
+        <h1 class="item-name">{{ item.name }}</h1>
         <h2 class="username">{{ review.user.username }}</h2>
       </div>
 

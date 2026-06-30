@@ -16,7 +16,6 @@
   padding: 16px; 
 }
 
-/* Image "frame" */
 .review-image {
   flex-shrink: 0;
   width: 150px;
@@ -28,13 +27,18 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 5%;
 }
 
-/* ARTIST STYLE (circle image only) */
-.review-row.artist .review-image img {
+.circle {
   border-radius: 50%;
+  object-fit: cover;
 }
+
+.square {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
 
 .review-body {
   flex: 1;

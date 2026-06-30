@@ -10,6 +10,7 @@ import { SearchService } from '../../core/service/search/search.service';
 import { UserService } from '../../core/service/user/user.service';
 import { ArtistService } from '../../core/service/item/artist/artist.service';
 
+import { AlbumComponent } from '../item/album/album.component';
 import { ArtistComponent } from '../item/artist/artist.component';
 import { ItemService } from '../../core/service/item/item/item.service';
 
@@ -18,6 +19,7 @@ import { ItemService } from '../../core/service/item/item/item.service';
   standalone: true,
   imports: [
     ArtistComponent,
+    AlbumComponent,
     CommonModule
   ],
   templateUrl: './search-bar.component.html',
@@ -82,18 +84,18 @@ export class SearchBarComponent implements OnInit {
     }
 
     this.searchService.search(query, types).subscribe({
-      next: (response: any) => {
-
-        const artists = response?.artists ?? [];
-
-        this.results = artists;
+      next: (response) => {
+    
+        const items = response.items ?? [];
+    
+        this.results = items;
         this.currentPage = 1;
-
+    
         this.updateDisplayedItems();
       },
-
+    
       error: (err) => {
-        console.error('❌ SEARCH ERROR:', err);
+        console.error(err);
       }
     });
   }
@@ -124,29 +126,24 @@ export class SearchBarComponent implements OnInit {
     return Math.ceil(this.results.length / this.itemsPerPage);
   }
 
-  // TYPE GUARD
-  isArtist(item: Item): item is Artist {
-    return this.searchType === 'artist';
-  }
 
-  // ⭐ KEY FIX: persist before emitting
   selectItem(item: Item): void {
 
-    if (item.type === 'artist') {
-      console.log(item);
-      this.itemService.addItem(item as Artist).subscribe({
-        next: (savedArtist) => {
-          console.log('✅ Saved artist:', savedArtist);
-          this.itemSelected.emit(savedArtist);
+    if (item.type === 'artist' || item.type === 'album') {
+  
+      this.itemService.addItem(item).subscribe({
+        next: (savedItem) => {
+          console.log('Saved:', savedItem);
+          this.itemSelected.emit(savedItem);
         },
         error: (err) => {
-          console.error('❌ Failed to save artist:', err);
+          console.error('Failed to save item:', err);
         }
       });
-
+  
       return;
     }
-
+  
     this.itemSelected.emit(item);
   }
 }

@@ -25,6 +25,7 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
   isFollowing = false;
   isLoading: boolean = false;
   errorMessage: string = '';
+  cardComponent: string = 'ReviewCardComponent'
 
   constructor(
     private reviewService: ReviewService,

@@ -1,6 +1,6 @@
 <!-- SEARCH BAR -->
 <div class="search-bar">
-  <input type="text" [value]="searchQuery" (input)="onSearchInput($event)" placeholder="Search artists..." />
+  <input type="text" [value]="searchQuery" (input)="onSearchInput($event)" placeholder="Search..." />
 
   <button type="button" class="clear-btn" (click)="searchQuery = ''" aria-label="Clear search input">
     ×
@@ -8,17 +8,35 @@
 </div>
 
 <!-- RESULTS -->
-<div *ngIf="results.length > 0; else noResults">
+<div *ngIf="results.length > 0">
+
+
 
   <div class="item-list">
 
     <ng-container *ngFor="let item of displayedItems">
+
       <div (click)="selectItem(item)">
-        <app-artist [item]="item"></app-artist>
+
+        <!-- ARTIST -->
+        <app-artist *ngIf="item.type === 'artist'" [item]="item">
+        </app-artist>
+
+        <!-- ALBUM -->
+        <app-album *ngIf="item.type === 'album'" [item]="item">
+        </app-album>
+
+        <!-- USER (TEMP: reuse artist component) -->
+        <app-artist *ngIf="item.type === 'user'" [item]="item">
+        </app-artist>
+
       </div>
+
     </ng-container>
 
   </div>
+
+
 
   <!-- PAGINATION -->
   <div class="pagination-controls">
@@ -38,10 +56,3 @@
   </div>
 
 </div>
-
-<!-- NO RESULTS -->
-<ng-template #noResults>
-  <div>
-    No artists found.
-  </div>
-</ng-template>
