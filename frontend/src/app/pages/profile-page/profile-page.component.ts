@@ -3,44 +3,47 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-import { BasePageComponent } from '../base-page/base-page.component';
 import { ReviewViewerComponent } from '../../component/review/review-viewer/review-viewer.component';
 import { Review } from '../../core/model/review/review.type';
 import { ReviewService } from '../../core/service/review/review.service';
-import { AuthService } from '../../core/service/user/auth/auth.service';
 import { UserDTO, UserService } from '../../core/service/user/user.service';
 import { UserListDialogComponent } from '../../component/user-list-dialog/user-list-dialog.component';
 import { UiService } from '../../core/service/ui/ui.service';
+
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [BasePageComponent, CommonModule, ReviewViewerComponent],
+  imports: [CommonModule, ReviewViewerComponent],
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css']
 })
-export class ProfilePageComponent extends BasePageComponent implements OnInit {
+export class ProfilePageComponent implements OnInit {
 
-  reviews: Review[] | null = null;
-  override user: UserDTO | null = null;
+  reviews: Review[] = [];
+  user: UserDTO | null = null;
+  currentUser: UserDTO | null = null;
+
   isFollowing = false;
-  isLoading: boolean = false;
-  errorMessage: string = '';
-  cardComponent: string = 'ReviewCardComponent'
+  isLoading = false;
+  errorMessage = '';
+  cardComponent = 'ReviewCardComponent';
 
   constructor(
     private reviewService: ReviewService,
-    private userService: UserService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    authService: AuthService,
-    ui: UiService
-  ) {
-    super(authService, ui);
-  }
+    private userService: UserService,
+    private ui: UiService
+  ) {}
 
-  override ngOnInit(): void {
-    super.ngOnInit?.();
+  ngOnInit(): void {
 
+    // ✅ load logged-in user once
+    this.userService.getMyProfile().subscribe(user => {
+      this.currentUser = user;
+    });
+
+    // load profile user from route
     this.route.params.subscribe(params => {
       const username = params['username'];
       if (username) {
@@ -53,22 +56,15 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
     this.userService.getUserByUsername(username).subscribe({
       next: user => {
         this.user = user;
-
         this.updateFollowingStatus();
-
-        // 👉 ADDED: ensure reviews load immediately
         this.loadUserReviews();
       },
       error: err => console.error('Failed to load user:', err)
     });
   }
 
-  // =========================
-  // 🔥 ADDED FIXED METHOD
-  // =========================
   loadUserReviews(): void {
-    const username = this.user?.username || this.authService.getCurrentUser()?.username;
-
+    const username = this.user?.username || this.currentUser?.username;
     if (!username) return;
 
     this.isLoading = true;
@@ -80,49 +76,43 @@ export class ProfilePageComponent extends BasePageComponent implements OnInit {
       },
       error: () => {
         this.errorMessage = 'Failed to load user reviews';
-        this.isLoading = false;
         this.reviews = [];
+        this.isLoading = false;
       }
     });
   }
 
   private updateFollowingStatus(): void {
-    const loggedInUser = this.authService.getCurrentUser();
-    if (loggedInUser && this.user) {
-      this.isFollowing = loggedInUser.following?.some(f => f === this.user!.username) ?? false;
+    if (this.currentUser && this.user) {
+      this.isFollowing =
+        this.currentUser.following?.includes(this.user.username) ?? false;
     } else {
       this.isFollowing = false;
     }
   }
 
   follow(): void {
-    const loggedInUser = this.authService.getCurrentUser();
-    if (!loggedInUser || !this.user) return;
+    if (!this.currentUser || !this.user) return;
 
-    this.userService.followUser(loggedInUser.username, this.user.username).subscribe({
+    this.userService.followUser(this.currentUser.username, this.user.username).subscribe({
       next: () => {
         this.isFollowing = true;
-        loggedInUser.following = loggedInUser.following || [];
-        loggedInUser.following.push(this.user!.username);
-      },
-      error: err => console.error('Failed to follow user:', err)
+        this.currentUser!.following ??= [];
+        this.currentUser!.following.push(this.user!.username);
+      }
     });
   }
 
   unfollow(): void {
-    const loggedInUser = this.authService.getCurrentUser();
-    if (!loggedInUser || !this.user) return;
+    if (!this.currentUser || !this.user) return;
 
-    this.userService.unfollowUser(loggedInUser.username, this.user.username).subscribe({
+    this.userService.unfollowUser(this.currentUser.username, this.user.username).subscribe({
       next: () => {
         this.isFollowing = false;
 
-        if (loggedInUser.following) {
-          loggedInUser.following =
-            loggedInUser.following.filter(f => f !== this.user!.username);
-        }
-      },
-      error: err => console.error('Failed to unfollow user:', err)
+        this.currentUser!.following =
+          this.currentUser!.following?.filter(f => f !== this.user!.username) ?? [];
+      }
     });
   }
 

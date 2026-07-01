@@ -1,24 +1,29 @@
 import { Component } from '@angular/core';
-import { BasePageComponent } from '../base-page/base-page.component';
-import { SearchBarComponent } from '../../component/search-bar/search-bar.component';
 import { Router } from '@angular/router';
+
+import { SearchBarComponent } from '../../component/search-bar/search-bar.component';
 import { AuthService } from '../../core/service/user/auth/auth.service';
 import { UiService } from '../../core/service/ui/ui.service';
+import { UserService } from '../../core/service/user/user.service';
 
 @Component({
   selector: 'app-explore-page',
-  imports: [BasePageComponent, SearchBarComponent],
+  standalone: true,
+  imports: [SearchBarComponent],
   templateUrl: './explore-page.component.html',
   styleUrl: './explore-page.component.css'
 })
-export class ExplorePageComponent extends BasePageComponent {
+export class ExplorePageComponent {
 
-  constructor(private router: Router, authService: AuthService, ui: UiService) {
-    super(authService, ui);
-  }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService,
+    public ui: UiService
+  ) {}
 
   onItemSelected(item: any) {
-    console.log(item.id)
+    console.log(item.id);
     this.router.navigate(['/item', item.id]);
   }
 }

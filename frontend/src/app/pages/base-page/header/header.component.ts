@@ -9,26 +9,32 @@ import { UiService } from '../../../core/service/ui/ui.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgIf, FormsModule],  // <-- Add NgIf here
+  imports: [RouterLink, RouterLinkActive, NgIf, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  title = signal('MMAD');
 
+  title = signal('MMAD');
   currentUsername = signal<string | null>(null);
   searchQuery = '';
 
-  constructor(private authService: AuthService, public ui:UiService) {
-    this.currentUsername.set(this.authService.getCurrentUser()?.username ?? null,
-    );
-  }
-  
-  performSearch() {
-    console.log('Searching for:', this.searchQuery);
-    // Add your search logic here
+  constructor(
+    private authService: AuthService,
+    public ui: UiService
+  ) {
+    this.loadUser();
   }
 
+  private loadUser(): void {
+    this.currentUsername.set(
+      this.authService.getUsername()
+    );
+  }
+
+  performSearch() {
+    console.log('Searching for:', this.searchQuery);
+  }
 
   openModal() {
     this.ui.openReviewBuilder();
@@ -37,6 +43,4 @@ export class HeaderComponent {
   closeModal() {
     this.ui.closeReviewBuilder();
   }
-
-
 }

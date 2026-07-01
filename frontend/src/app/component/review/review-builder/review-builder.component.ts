@@ -83,21 +83,20 @@ export class ReviewBuilderComponent implements OnInit, OnDestroy {
 
   submit(): void {
     if (!this.selectedItem) return;
-    
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
+  
+    const username = this.authService.getUsername();
+  
+    if (!username) {
       this.errorMessage = 'You must be logged in to post a review';
       return;
     }
-
+  
     const payload = {
-      username: currentUser.username,
       itemId: this.selectedItem.id!,
       rating: this.rating,
       description: this.text
     };
-    
-    
+  
     this.reviewService.createReview(payload).subscribe({
       next: () => this.close(),
       error: (err) => console.error('Failed to save review:', err)

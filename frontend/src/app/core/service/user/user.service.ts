@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { LoginResponse } from '../../dto/login-response.model';
 
 export interface UserRequest {
   username: string;
@@ -21,12 +22,16 @@ export class UserService {
 
   private apiUrl = 'http://localhost:8080/user';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
+  getMyProfile(): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.apiUrl}/me`);
+  }
+  
   getUserByUsername(username: string): Observable<UserDTO> {
     return this.http.get<UserDTO>(`${this.apiUrl}/username/${username}`);
   }
-  
+
 
   register(credentials: UserRequest): Observable<UserDTO> {
     return this.http.post<UserDTO>(`${this.apiUrl}/create`, credentials).pipe(
@@ -34,8 +39,11 @@ export class UserService {
     );
   }
 
-  login(credentials: UserRequest): Observable<UserDTO> {
-    return this.http.post<UserDTO>(`${this.apiUrl}/login`, credentials).pipe(
+  login(credentials: UserRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/login`,
+      credentials
+    ).pipe(
       catchError(this.handleError)
     );
   }
@@ -51,7 +59,7 @@ export class UserService {
     const params = new HttpParams()
       .set('username', username)
       .set('followUsername', followUsername);
-  
+
     return this.http.post(`${this.apiUrl}/follow`, null, {
       params,
       responseType: 'text' as const // 👈 this prevents JSON parsing errors
@@ -64,7 +72,7 @@ export class UserService {
     const params = new HttpParams()
       .set('username', username)
       .set('unfollowUsername', unfollowUsername);
-  
+
     return this.http.post(`${this.apiUrl}/unfollow`, null, {
       params,
       responseType: 'text' as const // to prevent JSON parsing errors
@@ -72,7 +80,6 @@ export class UserService {
       catchError(this.handleError)
     );
   }
-  
 
   getFollowers(userId: number): Observable<UserDTO[]> {
     return this.http.get<UserDTO[]>(`${this.apiUrl}/followers/${userId}`).pipe(

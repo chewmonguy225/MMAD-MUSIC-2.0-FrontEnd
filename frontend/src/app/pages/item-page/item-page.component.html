@@ -1,31 +1,27 @@
-<app-base-page>
+<!-- ITEM HEADER -->
+<div *ngIf="item" class="item-header">
 
-    <!-- ITEM HEADER -->
-    <div *ngIf="item" class="item-header">
-  
-      <img
-        [src]="item.imageURL"
-        [alt]="item.name"
-        class="item-image">
-  
-      <div class="item-info">
-  
-        <h1>{{ item.name }}</h1>
-  
-        <button class="review-btn" (click)="openReviewModal()">
-          Write a Review
-        </button>
-  
-      </div>
-  
-    </div>
-  
-    <!-- REVIEWS -->
-    <app-review-viewer
-      [reviews]="reviews"
-      [cardComponent]="cardComponent"
-      [isLoading]="isLoading"
-      [errorMessage]="errorMessage">
-    </app-review-viewer>
-  
-  </app-base-page>
+  <img
+    [src]="item.imageURL"
+    [alt]="item.name"
+    class="item-image">
+
+  <div class="item-info">
+
+    <h1>{{ item.name }}</h1>
+
+    <button class="review-btn" (click)="openReviewModal()">
+      Write a Review
+    </button>
+
+  </div>
+
+</div>
+
+<!-- REVIEWS -->
+<app-review-viewer
+  [reviews]="reviews"
+  [cardComponent]="cardComponent"
+  [isLoading]="isLoading"
+  [errorMessage]="errorMessage">
+</app-review-viewer>
