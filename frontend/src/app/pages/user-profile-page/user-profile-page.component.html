@@ -1,0 +1,37 @@
+<p class="stats-container" *ngIf="user as u">
+    <span class="username">{{ u.username }}</span>
+  
+    <span class="stats">
+      Reviews: {{ reviews?.length || 0 }} |
+  
+      <button mat-button (click)="openUserList('Followers', u.followers || [])">
+        Followers: {{ u.followers?.length || 0 }}
+      </button>
+  
+      <button mat-button (click)="openUserList('Following', u.following || [])">
+        Following: {{ u.following?.length || 0 }}
+      </button>
+  
+      <!-- ✅ FOLLOW BUTTON (optional but now consistent) -->
+      <ng-container *ngIf="currentUser && currentUser.username !== u.username">
+  
+        <button mat-button *ngIf="!isFollowing" (click)="follow()">
+          Follow
+        </button>
+  
+        <button mat-button *ngIf="isFollowing" (click)="unfollow()">
+          Unfollow
+        </button>
+  
+      </ng-container>
+  
+    </span>
+  </p>
+  
+  <app-review-viewer
+    [reviews]="reviews ?? []"
+    [isLoading]="isLoading"
+    [cardComponent]="cardComponent"
+    [errorMessage]="errorMessage"
+    (refresh)="user && loadReviews(user.username)">
+  </app-review-viewer>

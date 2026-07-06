@@ -12,7 +12,12 @@ export interface UserDTO {
   username: string;
   followers?: string[]; // just usernames for now
   following?: string[]; // just usernames for now
-  playlists?: number[];
+}
+
+export interface UserProfileDTO {
+  username: string;
+  followers?: string[]; // just usernames for now
+  following?: string[]; // just usernames for now
 }
 
 @Injectable({
@@ -23,15 +28,6 @@ export class UserService {
   private apiUrl = 'http://localhost:8080/user';
 
   constructor(private http: HttpClient) { }
-
-  getMyProfile(): Observable<UserDTO> {
-    return this.http.get<UserDTO>(`${this.apiUrl}/me`);
-  }
-  
-  getUserByUsername(username: string): Observable<UserDTO> {
-    return this.http.get<UserDTO>(`${this.apiUrl}/username/${username}`);
-  }
-
 
   register(credentials: UserRequest): Observable<UserDTO> {
     return this.http.post<UserDTO>(`${this.apiUrl}/create`, credentials).pipe(
@@ -46,6 +42,14 @@ export class UserService {
     ).pipe(
       catchError(this.handleError)
     );
+  }
+
+  getMyProfile(): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.apiUrl}/me`);
+  }
+  
+  getUserByUsername(username: string): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.apiUrl}/username/${username}`);
   }
 
   searchUsers(query: string): Observable<UserDTO[]> {
@@ -81,13 +85,13 @@ export class UserService {
     );
   }
 
-  getFollowers(userId: number): Observable<UserDTO[]> {
+  getFollowersList(userId: number): Observable<UserDTO[]> {
     return this.http.get<UserDTO[]>(`${this.apiUrl}/followers/${userId}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  getFollowing(userId: number): Observable<UserDTO[]> {
+  getFollowingList(userId: number): Observable<UserDTO[]> {
     return this.http.get<UserDTO[]>(`${this.apiUrl}/following/${userId}`).pipe(
       catchError(this.handleError)
     );

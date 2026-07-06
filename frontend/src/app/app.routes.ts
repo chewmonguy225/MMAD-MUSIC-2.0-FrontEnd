@@ -1,30 +1,39 @@
 import { Routes } from '@angular/router';
+
 import { LoginComponent } from './component/login/login.component';
 import { BasePageComponent } from './pages/base-page/base-page.component';
 
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { ExplorePageComponent } from './pages/explore-page/explore-page.component';
-import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { ProfilePageComponent } from './pages/my-profile-page/profile-page.component';
 import { ItemPageComponent } from './pages/item-page/item-page.component';
+import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
+
+import { authGuard } from './core/guards/auth/auth.guard';
+import { guestGuard } from './core/guards/guest/guest.guard';
 
 export const routes: Routes = [
+
+  // Redirect root
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
   },
 
-  // PUBLIC
+  // Login page (only when logged out)
   {
     path: 'login',
     component: LoginComponent,
-    title: 'Login'
+    title: 'Login',
+    canActivate: [guestGuard]
   },
 
-  // PROTECTED LAYOUT
+  // Protected pages
   {
     path: '',
     component: BasePageComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'home',
@@ -37,18 +46,27 @@ export const routes: Routes = [
         title: 'Explore'
       },
       {
-        path: 'myProfilePage',
+        path: 'me',
         component: ProfilePageComponent,
         title: 'My Profile'
       },
       {
         path: 'profile/:username',
-        component: ProfilePageComponent
+        component: UserProfilePageComponent,
+        title: 'User Profile'
       },
       {
         path: 'item/:id',
-        component: ItemPageComponent
+        component: ItemPageComponent,
+        title: 'Item'
       }
     ]
+  },
+
+  // Catch-all route
+  {
+    path: '**',
+    redirectTo: 'home'
   }
+
 ];

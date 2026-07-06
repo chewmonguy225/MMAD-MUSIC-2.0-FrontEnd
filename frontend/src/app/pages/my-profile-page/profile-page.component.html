@@ -1,0 +1,44 @@
+<p class="stats-container" *ngIf="currentUser as user">
+  <span class="username">{{ user.username }}</span>
+
+  <span class="stats">
+    Reviews: {{ reviews?.length || 0 }} |
+
+    <button mat-button (click)="openUserList('Followers', user.followers || [])">
+      Followers: {{ user.followers?.length || 0 }}
+    </button>
+
+    <button mat-button (click)="openUserList('Following', user.following || [])">
+      Following: {{ user.following?.length || 0 }}
+    </button>
+  </span>
+</p>
+
+<app-review-viewer
+  [reviews]="reviews ?? []"
+  [isLoading]="isLoading"
+  [cardComponent]="cardComponent"
+  [errorMessage]="errorMessage"
+  (refresh)="currentUser && loadMyReviews(currentUser.username)">
+</app-review-viewer>
+
+<!-- 👇 USER LIST PANEL -->
+<div *ngIf="showUserList" class="user-list-panel">
+
+  <h3>{{ listTitle }}</h3>
+
+  <div *ngIf="listUsers.length > 0; else empty">
+    <div *ngFor="let u of listUsers">
+      {{ u }}
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <p>No users found</p>
+  </ng-template>
+
+  <button mat-button (click)="showUserList = false">
+    Close
+  </button>
+
+</div>

@@ -1,4 +1,3 @@
-import { UserDTO } from "../../service/user/user.service";
 import { Item } from "../item/item.type";
 
 export interface Review {
@@ -6,7 +5,7 @@ export interface Review {
   rating: number;
   description: string;
   item: Item;
-  user: UserDTO;
+  username: string;
   createdAt?: string;
   updatedAt?: string;
 }

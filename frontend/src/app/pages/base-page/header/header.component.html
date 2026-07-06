@@ -24,15 +24,11 @@
             <i class="fa fa-plus"></i>
         </a>
 
-        <!-- Profile -->
-        <span *ngIf="currentUsername(); else defaultProfile" [routerLink]="['/profile/', currentUsername()]"
-            routerLinkActive="active-link" title="Profile">
+        <span *ngIf="currentUsername()" routerLink="/me" routerLinkActive="active-link"
+            title="My Profile">
             <i class="fa fa-user"></i>
         </span>
 
-        <ng-template #defaultProfile>
-            <i class="fa fa-user" title="Profile"></i>
-        </ng-template>
 
     </nav>
 

@@ -27,8 +27,9 @@
         </app-album>
 
         <!-- USER (TEMP: reuse artist component) -->
-        <app-artist *ngIf="item.type === 'user'" [item]="item">
-        </app-artist>
+        <ng-container *ngIf="item.type === 'user' && userCache.get(item.name) as user">
+          <app-user-card [user]="user"></app-user-card>
+        </ng-container>
 
       </div>
 

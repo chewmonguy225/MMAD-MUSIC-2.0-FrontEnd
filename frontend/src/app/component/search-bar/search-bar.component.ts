@@ -3,24 +3,24 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { Artist } from '../../core/model/item/artist.type';
 import { Item } from '../../core/model/item/item.type';
-
+import { UserDTO, UserService } from '../../core/service/user/user.service';
 import { SearchService } from '../../core/service/search/search.service';
-import { UserService } from '../../core/service/user/user.service';
-import { ArtistService } from '../../core/service/item/artist/artist.service';
+import { ItemService } from '../../core/service/item/item/item.service';
 
 import { AlbumComponent } from '../item/album/album.component';
 import { ArtistComponent } from '../item/artist/artist.component';
-import { ItemService } from '../../core/service/item/item/item.service';
+import { UserCardComponent } from '../user-card/user-card.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
   imports: [
+    CommonModule,
     ArtistComponent,
     AlbumComponent,
-    CommonModule
+    UserCardComponent
   ],
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
@@ -30,24 +30,25 @@ export class SearchBarComponent implements OnInit {
   @Output() itemSelected = new EventEmitter<Item>();
 
   private searchSubject = new Subject<string>();
-  searchQuery: string = '';
+  searchQuery = '';
 
-  // results
   results: Item[] = [];
   displayedItems: Item[] = [];
 
-  // pagination
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
+  currentPage = 1;
+  itemsPerPage = 5;
 
-  // filter
   searchType: 'artist' | 'album' | 'song' | 'user' | 'all' = 'all';
+
+  // ✅ cache users
+  userCache = new Map<string, UserDTO>();
 
   constructor(
     private searchService: SearchService,
     private userService: UserService,
-    private itemService: ItemService
-  ) {}
+    private itemService: ItemService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.searchSubject.pipe(
@@ -59,13 +60,13 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
-  // INPUT HANDLER
+  // INPUT
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchSubject.next(input.value);
   }
 
-  // MAIN SEARCH
+  // SEARCH
   performSearch(): void {
 
     const query = this.searchQuery.trim();
@@ -77,7 +78,7 @@ export class SearchBarComponent implements OnInit {
       return;
     }
 
-    let types: string[] | undefined = undefined;
+    let types: string[] | undefined;
 
     if (this.searchType !== 'all') {
       types = [this.searchType];
@@ -85,27 +86,37 @@ export class SearchBarComponent implements OnInit {
 
     this.searchService.search(query, types).subscribe({
       next: (response) => {
-    
+        console.log(response)
         const items = response.items ?? [];
-    
+
         this.results = items;
+
+
+        console.log("=== FRONTEND ORDER CHECK ===");
+        this.results.forEach(i => console.log(i.name));
+        
         this.currentPage = 1;
-    
+
+        // ✅ PRELOAD USERS HERE (correct place)
+        items.forEach(item => {
+          if (item.type === 'user' && !this.userCache.has(item.name)) {
+            this.userService.getUserByUsername(item.name).subscribe(user => {
+              this.userCache.set(item.name, user);
+            });
+          }
+        });
+
         this.updateDisplayedItems();
       },
-    
-      error: (err) => {
-        console.error(err);
-      }
+      error: (err) => console.error(err)
     });
   }
 
   // PAGINATION
   updateDisplayedItems(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-
-    this.displayedItems = this.results.slice(startIndex, endIndex);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.displayedItems = this.results.slice(start, end);
   }
 
   nextPage(): void {
@@ -126,24 +137,22 @@ export class SearchBarComponent implements OnInit {
     return Math.ceil(this.results.length / this.itemsPerPage);
   }
 
-
+  // ITEM CLICK
   selectItem(item: Item): void {
 
     if (item.type === 'artist' || item.type === 'album') {
-  
       this.itemService.addItem(item).subscribe({
-        next: (savedItem) => {
-          console.log('Saved:', savedItem);
-          this.itemSelected.emit(savedItem);
-        },
-        error: (err) => {
-          console.error('Failed to save item:', err);
-        }
+        next: (savedItem) => this.itemSelected.emit(savedItem),
+        error: (err) => console.error(err)
       });
-  
       return;
     }
-  
+
     this.itemSelected.emit(item);
+  }
+
+  // USER NAVIGATION
+  goToUserProfile(username: string): void {
+    this.router.navigate(['/profile', username]);
   }
 }
