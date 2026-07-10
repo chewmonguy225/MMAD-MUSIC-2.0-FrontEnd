@@ -4,23 +4,22 @@ import { Router } from '@angular/router';
 
 import { ItemComponent } from '../item.component';
 import { ItemService } from '../../../service/item/item/item.service';
-import { Album } from '../../../core/model/item/album.type';
+import { Song } from '../../../core/model/item/song.type';
 
 @Component({
-  selector: 'app-album',
+  selector: 'app-song',
   standalone: true,
   imports: [
     CommonModule
   ],
-  templateUrl: './album.component.html',
-  styleUrl: './album.component.css'
+  templateUrl: './song.component.html',
+  styleUrl: './song.component.css'
 })
-export class AlbumComponent extends ItemComponent {
+export class SongComponent extends ItemComponent {
 
-  get album(): Album {
-    return this.item as Album;
+  get song(): Song {
+    return this.item as Song;
   }
-
 
   constructor(
     itemService: ItemService,
@@ -29,16 +28,14 @@ export class AlbumComponent extends ItemComponent {
     super(itemService, router);
   }
 
-
-  getArtistNames(album: Album): string {
-    return album.artists
-      ?.map(artist => artist.name)
-      .join(', ') ?? '';
-  }
-
-
   override onSpotifyClick(): void {
     // optional
+  }
+
+  getArtistNames(song: Song): string {
+    return song.artists
+      ?.map(artist => artist.name)
+      .join(', ') ?? '';
   }
 
 }

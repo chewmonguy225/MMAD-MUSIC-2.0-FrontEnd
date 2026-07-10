@@ -1,0 +1,71 @@
+<div class="page-layout">
+
+  <!-- LEFT SIDE -->
+  <section class="main">
+
+    <div *ngIf="item" class="item-header">
+
+      <img [src]="item.imageURL" [alt]="item.name" class="item-image">
+
+      <div class="item-info">
+
+        <h1>{{ item.name }}</h1>
+
+        <button class="review-btn" (click)="openReviewModal()">
+          Write a Review
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- REVIEWS -->
+    <app-review-viewer
+      [reviews]="reviews"
+      [cardComponent]="cardComponent"
+      [isLoading]="isLoading"
+      [errorMessage]="errorMessage">
+    </app-review-viewer>
+
+  </section>
+
+  <!-- RIGHT SIDE -->
+  <section class="side">
+
+    <!-- Top Tracks -->
+    <div class="side-box">
+      <h3>Top Tracks</h3>
+
+      <div *ngIf="songs.length; else noSongs">
+
+        <div
+          *ngFor="let song of songs; let i = index"
+          class="track-row">
+
+          <span class="track-number">
+            {{ i + 1 }}
+          </span>
+
+          <span class="track-name">
+            {{ song.name }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <ng-template #noSongs>
+        <p>No tracks available.</p>
+      </ng-template>
+
+    </div>
+
+    <!-- Related -->
+    <div class="side-box">
+      <h3>Related</h3>
+      <p>Content goes here</p>
+    </div>
+
+  </section>
+
+</div>

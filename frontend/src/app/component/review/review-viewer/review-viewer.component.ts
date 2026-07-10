@@ -8,7 +8,6 @@ import { ItemReviewCardComponent } from '../item-reviews-card/item-reviews-card.
   standalone: true,
   imports: [
     CommonModule,
-    NgComponentOutlet,
     ReviewCardComponent,
     ItemReviewCardComponent
   ],
@@ -38,14 +37,7 @@ export class ReviewViewerComponent {
   // -------------------------
   // EVENTS
   // -------------------------
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['reviews']) {
-      console.log('Reviews updated:', this.reviews);
-    }
-  }
   onRefresh(): void {
     this.refresh.emit();
-    console.log(this.reviews)
   }
 }

@@ -4,12 +4,13 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Item } from '../../core/model/item/item.type';
-import { UserDTO, UserService } from '../../core/service/user/user.service';
-import { SearchService } from '../../core/service/search/search.service';
-import { ItemService } from '../../core/service/item/item/item.service';
+import { UserDTO, UserService } from '../../service/user/user.service';
+import { SearchService } from '../../service/search/search.service';
+import { ItemService } from '../../service/item/item/item.service';
 
 import { AlbumComponent } from '../item/album/album.component';
 import { ArtistComponent } from '../item/artist/artist.component';
+import { SongComponent } from '../item/song/song.component';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { Router } from '@angular/router';
 
@@ -20,6 +21,7 @@ import { Router } from '@angular/router';
     CommonModule,
     ArtistComponent,
     AlbumComponent,
+    SongComponent,
     UserCardComponent
   ],
   templateUrl: './search-bar.component.html',
@@ -92,9 +94,6 @@ export class SearchBarComponent implements OnInit {
         this.results = items;
 
 
-        console.log("=== FRONTEND ORDER CHECK ===");
-        this.results.forEach(i => console.log(i.name));
-        
         this.currentPage = 1;
 
         // ✅ PRELOAD USERS HERE (correct place)
@@ -140,7 +139,8 @@ export class SearchBarComponent implements OnInit {
   // ITEM CLICK
   selectItem(item: Item): void {
 
-    if (item.type === 'artist' || item.type === 'album') {
+    console.log(item);
+    if (item.type === 'artist' || item.type === 'album' || item.type === 'song') {
       this.itemService.addItem(item).subscribe({
         next: (savedItem) => this.itemSelected.emit(savedItem),
         error: (err) => console.error(err)

@@ -1,0 +1,61 @@
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+
+<div class="item-card">
+
+  <!-- Song Artwork -->
+  <div class="image-container">
+
+    <img
+      [src]="song.imageURL"
+      [alt]="song.name || 'Song Image'"
+      class="item-image"
+    />
+
+  </div>
+
+
+  <!-- Song Name -->
+  <h1 class="item-name">
+    {{ song.name }}
+  </h1>
+
+
+  <!-- Artists -->
+  <p 
+    class="item-artists"
+    *ngIf="song.artists?.length">
+
+    {{ getArtistNames(song) }}
+
+  </p>
+
+
+  <!-- Album -->
+  <p 
+    class="item-album"
+    *ngIf="song.album">
+
+    {{ song.album.name }}
+
+  </p>
+
+
+  <!-- Spotify Button -->
+  <div class="social-links">
+
+    <a
+      href="#"
+      (click)="onSpotifyClick(); $event.preventDefault()"
+      class="spotify-button"
+      aria-label="Open in Spotify">
+
+      <i class="fa fa-spotify"></i>
+
+    </a>
+
+  </div>
+
+</div>

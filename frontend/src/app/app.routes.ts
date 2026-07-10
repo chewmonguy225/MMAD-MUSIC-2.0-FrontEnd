@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 
 import { LoginComponent } from './component/login/login.component';
-import { BasePageComponent } from './pages/base-page/base-page.component';
+import { BasePageComponent } from './component/pages/base-page/base-page.component';
 
-import { HomePageComponent } from './pages/home-page/home-page.component';
-import { ExplorePageComponent } from './pages/explore-page/explore-page.component';
-import { ProfilePageComponent } from './pages/my-profile-page/profile-page.component';
-import { ItemPageComponent } from './pages/item-page/item-page.component';
-import { UserProfilePageComponent } from './pages/user-profile-page/user-profile-page.component';
+import { HomePageComponent } from './component/pages/home-page/home-page.component';
+import { ExplorePageComponent } from './component/pages/explore-page/explore-page.component';
+import { ProfilePageComponent } from './component/pages/my-profile-page/profile-page.component';
+import { ItemPageComponent } from './component/pages/item-page/item-page.component';
+import { UserProfilePageComponent } from './component/pages/user-profile-page/user-profile-page.component';
 
 import { authGuard } from './core/guards/auth/auth.guard';
 import { guestGuard } from './core/guards/guest/guest.guard';

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { UserDTO } from '../../core/service/user/user.service';
+import { UserDTO } from '../../service/user/user.service';
 
 @Component({
   selector: 'app-user-card',

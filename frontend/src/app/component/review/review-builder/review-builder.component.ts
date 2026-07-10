@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 
 import { Item } from '../../../core/model/item/item.type';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { ReviewService } from '../../../core/service/review/review.service';
-import { AuthService } from '../../../core/service/user/auth/auth.service';
-import { UiService } from '../../../core/service/ui/ui.service';
+import { ReviewService } from '../../../service/review/review.service';
+import { AuthService } from '../../../service/user/auth/auth.service';
+import { UiService } from '../../../service/ui/ui.service';
 
 @Component({
   selector: 'app-review-builder',
@@ -96,6 +96,8 @@ export class ReviewBuilderComponent implements OnInit, OnDestroy {
       rating: this.rating,
       description: this.text
     };
+
+    console.log(payload)
   
     this.reviewService.createReview(payload).subscribe({
       next: () => this.close(),

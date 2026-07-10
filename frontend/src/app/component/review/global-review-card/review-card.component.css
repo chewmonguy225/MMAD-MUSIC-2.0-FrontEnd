@@ -7,19 +7,23 @@
   overflow: hidden;
 }
 
+
 /* ROW LAYOUT */
 .review-row {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 16px;
-  padding: 16px; 
+  padding: 16px;
 }
 
+
+/* IMAGE */
 .review-image {
   flex-shrink: 0;
   width: 150px;
   height: 150px;
+  cursor: pointer;
 }
 
 .review-image img {
@@ -27,6 +31,11 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.15s ease;
+}
+
+.review-image:hover img {
+  transform: scale(1.03);
 }
 
 .circle {
@@ -40,42 +49,71 @@
 }
 
 
+/* BODY */
 .review-body {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: flex-start; /* start at the top */
+  justify-content: flex-start;
 }
 
-/* Item Title*/
+
+.body-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+
+/* ITEM TITLE */
 .review-body h1 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
   color: #333;
 }
-/* Reviewer's username*/
+
+
+/* USERNAME */
 .review-body h2 {
-  margin: 0;
-  font-size: 1.0rem;
+  margin: 8px 0 0;
+  font-size: 1rem;
   font-weight: 700;
   color: #333;
 }
 
-.body-top {
+.username {
+  cursor: pointer;
+}
+
+
+/* REVIEW CONTENT */
+.body-middle {
   display: flex;
-  justify-content: space-between; /* pushes items apart */
   align-items: center;
 }
 
-.body-middle {
-  display: flex;
-  align-items: center;     /* vertical */
-}
 
 /* HOVER */
 .review-row:hover {
   background-color: #fafafa;
   transition: background-color 0.2s ease;
+}
+
+
+/* CLICKABLE */
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover,
+.username:hover {
+  text-decoration: underline;
+}
+
+/* ITEM INFO (TYPE + ARTIST) */
+.item-info {
+  font-size: 0.9rem;
+  color: #666;
 }

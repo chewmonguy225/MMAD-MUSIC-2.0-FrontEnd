@@ -26,10 +26,14 @@
         <app-album *ngIf="item.type === 'album'" [item]="item">
         </app-album>
 
-        <!-- USER (TEMP: reuse artist component) -->
-        <ng-container *ngIf="item.type === 'user' && userCache.get(item.name) as user">
-          <app-user-card [user]="user"></app-user-card>
-        </ng-container>
+        <app-song *ngIf="item.type === 'song'" [item]="item">
+        </app-song>
+
+
+          <!-- USER (TEMP: reuse artist component) -->
+          <ng-container *ngIf="item.type === 'user' && userCache.get(item.name) as user">
+            <app-user-card [user]="user"></app-user-card>
+          </ng-container>
 
       </div>
 

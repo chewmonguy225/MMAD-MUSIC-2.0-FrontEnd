@@ -6,6 +6,6 @@ export interface Review {
   description: string;
   item: Item;
   username: string;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }

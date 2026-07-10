@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { ItemService } from '../../core/service/item/item/item.service';
+import { ItemService } from '../../service/item/item/item.service';
 import { Item } from '../../core/model/item/item.type';
 
 @Component({
