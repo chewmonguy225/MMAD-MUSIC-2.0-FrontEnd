@@ -17,9 +17,11 @@
 
                     <h3>Verify Account</h3>
 
+
                     <p class="subtitle">
                         Enter the verification code sent to your email.
                     </p>
+
 
 
                     <div *ngIf="errorMessage" class="error-message">
@@ -27,9 +29,18 @@
                     </div>
 
 
+
                     <div *ngIf="successMessage" class="success-message">
                         {{ successMessage }}
                     </div>
+
+
+
+                    <div *ngIf="resendMessage" class="success-message">
+                        {{ resendMessage }}
+                    </div>
+
+
 
 
                     <div class="input-group">
@@ -39,6 +50,8 @@
                         <input name="email" [(ngModel)]="email" type="email" readonly />
 
                     </div>
+
+
 
 
                     <div class="input-group">
@@ -51,11 +64,44 @@
                     </div>
 
 
+
+
+
                     <button type="button" (click)="verifyAccount()">
 
                         Verify Account
 
                     </button>
+
+
+
+
+
+                    <p class="switch-text">
+
+                        Didn't receive the code?
+
+
+                        <a *ngIf="!resendDisabled" (click)="resendCode()">
+
+                            Resend code
+
+                        </a>
+
+
+
+                        <span *ngIf="resendDisabled">
+
+                            Resend available in
+                            {{ resendCooldown }}s
+
+                        </span>
+
+
+                    </p>
+
+
+
 
 
                     <p class="switch-text">
@@ -69,21 +115,31 @@
                     </p>
 
 
+
                 </form>
+
 
             </div>
 
+
         </div>
+
+
+
 
 
         <!-- RIGHT SIDE -->
         <div class="image-panel">
 
+
             <img src="https://images.unsplash.com/photo-1526394931762-90052e97b376?q=80&w=1974&auto=format&fit=crop"
                 alt="Music" />
 
 
+
             <div class="overlay"></div>
+
+
 
 
             <div class="quote">
@@ -103,9 +159,12 @@
             </div>
 
 
+
         </div>
 
 
+
     </div>
+
 
 </section>

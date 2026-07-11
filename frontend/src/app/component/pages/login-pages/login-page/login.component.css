@@ -72,6 +72,9 @@ form h3 {
 
 .input-group input {
 
+  width: 100%;
+  box-sizing: border-box;
+
   background: #ffffff12;
 
   border: 1px solid #ffffff30;
@@ -85,6 +88,7 @@ form h3 {
   font-size: 16px;
 
   outline: none;
+
 }
 
 
@@ -95,7 +99,12 @@ form h3 {
 }
 
 
-button {
+
+
+
+/* MAIN BUTTON */
+
+form > button {
 
   width: 100%;
 
@@ -120,12 +129,17 @@ button {
 }
 
 
-button:hover {
+form > button:hover {
 
   background: #ffb347;
 
 }
 
+
+
+
+
+/* SWITCH LINKS */
 
 .switch-text {
 
@@ -145,6 +159,11 @@ button:hover {
 }
 
 
+
+
+
+/* ERROR */
+
 .error-message {
 
   background: #ff003322;
@@ -161,6 +180,104 @@ button:hover {
 
 }
 
+
+
+
+
+/* SUCCESS */
+
+.success-message {
+
+  background: #00ff8822;
+
+  border: 1px solid #00ff8855;
+
+  color: #70ffb0;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+
+
+/* PASSWORD INPUT */
+
+.password-wrapper {
+
+  position: relative;
+
+  width: 100%;
+
+}
+
+
+.password-wrapper input {
+
+  width: 100%;
+
+  padding-right: 45px;
+
+}
+
+
+
+
+
+/* EYE BUTTON */
+
+.eye-button {
+
+  position: absolute;
+
+  right: 12px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+
+  background: transparent;
+
+  border: none;
+
+  width: auto;
+
+  padding: 0;
+
+
+  color: #aaa;
+
+  cursor: pointer;
+
+}
+
+
+.eye-button:hover {
+
+  background: transparent;
+
+  color: #ff9500;
+
+}
+
+
+.eye-button i {
+
+  font-size: 18px;
+
+}
+
+
+
+
+
+/* IMAGE SIDE */
 
 .image-panel {
 
@@ -189,12 +306,19 @@ button:hover {
   inset: 0;
 
   background:
-    linear-gradient(90deg,
+    linear-gradient(
+      90deg,
       #05031a 0%,
-      transparent 50%);
+      transparent 50%
+    );
 
 }
 
+
+
+
+
+/* QUOTE */
 
 .quote {
 
@@ -227,14 +351,24 @@ button:hover {
 }
 
 
+
+
+
+/* MOBILE */
+
 @media(max-width:900px) {
 
   .image-panel {
+
     display: none;
+
   }
 
+
   .auth-panel {
+
     width: 100%;
+
   }
 
 }

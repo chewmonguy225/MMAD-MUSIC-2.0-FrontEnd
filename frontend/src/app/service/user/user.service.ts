@@ -1,7 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+
 import { LoginResponse } from '../../core/dto/login-response.model';
+
 
 export interface RegisterRequest {
   username: string;
@@ -9,20 +11,36 @@ export interface RegisterRequest {
   password: string;
 }
 
+
 export interface LoginRequest {
   username: string;
   password: string;
 }
+
 
 export interface VerifyRequest {
   email: string;
   code: string;
 }
 
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+
 export interface MessageResponse {
   success: boolean;
   message: string;
 }
+
 
 export interface UserDTO {
   username: string;
@@ -30,11 +48,6 @@ export interface UserDTO {
   following?: string[];
 }
 
-export interface UserProfileDTO {
-  username: string;
-  followers?: string[];
-  following?: string[];
-}
 
 @Injectable({
   providedIn: 'root'
@@ -43,9 +56,15 @@ export class UserService {
 
   private apiUrl = 'http://localhost:8080/user';
 
-  constructor(private http: HttpClient) {}
 
-  register(credentials: RegisterRequest): Observable<UserDTO> {
+  constructor(
+    private http: HttpClient
+  ) { }
+
+
+  register(
+    credentials: RegisterRequest
+  ): Observable<UserDTO> {
 
     return this.http.post<UserDTO>(
       `${this.apiUrl}/create`,
@@ -57,7 +76,9 @@ export class UserService {
   }
 
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  login(
+    credentials: LoginRequest
+  ): Observable<LoginResponse> {
 
     return this.http.post<LoginResponse>(
       `${this.apiUrl}/login`,
@@ -69,11 +90,41 @@ export class UserService {
   }
 
 
-  verifyUser(credentials: VerifyRequest): Observable<MessageResponse> {
+  verifyUser(
+    credentials: VerifyRequest
+  ): Observable<MessageResponse> {
 
     return this.http.post<MessageResponse>(
       `${this.apiUrl}/verify`,
       credentials
+    ).pipe(
+      catchError(this.handleError)
+    );
+
+  }
+
+
+  forgotPassword(
+    request: ForgotPasswordRequest
+  ): Observable<MessageResponse> {
+
+    return this.http.post<MessageResponse>(
+      `${this.apiUrl}/forgot-password`,
+      request
+    ).pipe(
+      catchError(this.handleError)
+    );
+
+  }
+
+
+  resetPassword(
+    request: ResetPasswordRequest
+  ): Observable<MessageResponse> {
+
+    return this.http.post<MessageResponse>(
+      `${this.apiUrl}/reset-password`,
+      request
     ).pipe(
       catchError(this.handleError)
     );
@@ -92,7 +143,9 @@ export class UserService {
   }
 
 
-  getUserByUsername(username: string): Observable<UserDTO> {
+  getUserByUsername(
+    username: string
+  ): Observable<UserDTO> {
 
     return this.http.get<UserDTO>(
       `${this.apiUrl}/username/${username}`
@@ -103,10 +156,13 @@ export class UserService {
   }
 
 
-  searchUsers(query: string): Observable<UserDTO[]> {
+  searchUsers(
+    query: string
+  ): Observable<UserDTO[]> {
 
     const params = new HttpParams()
       .set('query', query);
+
 
     return this.http.get<UserDTO[]>(
       `${this.apiUrl}/search`,
@@ -166,7 +222,9 @@ export class UserService {
   }
 
 
-  getFollowersList(userId: number): Observable<UserDTO[]> {
+  getFollowersList(
+    userId: number
+  ): Observable<UserDTO[]> {
 
     return this.http.get<UserDTO[]>(
       `${this.apiUrl}/followers/${userId}`
@@ -177,7 +235,9 @@ export class UserService {
   }
 
 
-  getFollowingList(userId: number): Observable<UserDTO[]> {
+  getFollowingList(
+    userId: number
+  ): Observable<UserDTO[]> {
 
     return this.http.get<UserDTO[]>(
       `${this.apiUrl}/following/${userId}`
@@ -188,58 +248,70 @@ export class UserService {
   }
 
 
-  private handleError(error: HttpErrorResponse) {
+  private handleError(
+    error: HttpErrorResponse
+  ): Observable<never> {
 
-    let errorMessage = 'An unknown error occurred.';
+    let errorMessage =
+      'An unknown error occurred.';
 
 
-    if (error.error instanceof ErrorEvent) {
+    if (error.error?.message) {
 
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = error.error.message;
+
+    } else if (error.error instanceof ErrorEvent) {
+
+      errorMessage =
+        error.error.message;
 
     } else {
 
-      if (error.error?.message) {
+      switch (error.status) {
 
-        errorMessage = error.error.message;
+        case 400:
+          errorMessage = 'Bad request.';
+          break;
 
-      } else {
+        case 401:
+          errorMessage = 'Invalid username or password.';
+          break;
 
-        switch (error.status) {
+        case 403:
+          errorMessage = 'You do not have permission.';
+          break;
 
-          case 400:
-            errorMessage = 'Bad Request: Please check your input.';
-            break;
+        case 404:
+          errorMessage = 'Resource not found.';
+          break;
 
-          case 401:
-            errorMessage = 'Unauthorized: Invalid username or password.';
-            break;
+        case 500:
+          errorMessage = 'Server error.';
+          break;
 
-          case 403:
-            errorMessage = 'Forbidden: You don’t have permission to do this.';
-            break;
-
-          case 404:
-            errorMessage = 'Not Found: The requested resource was not found.';
-            break;
-
-          case 500:
-            errorMessage = 'Server Error: Please try again later.';
-            break;
-
-          default:
-            errorMessage = `Error ${error.status}: ${error.message}`;
-
-        }
+        default:
+          errorMessage =
+            `Error ${error.status}: ${error.message}`;
 
       }
 
     }
 
 
-    console.error(`HTTP Error: ${errorMessage}`);
-
     return throwError(() => new Error(errorMessage));
+
+  }
+
+  resendVerification(
+    request: { email: string }
+  ): Observable<MessageResponse> {
+
+    return this.http.post<MessageResponse>(
+      `${this.apiUrl}/resend-verification`,
+      request
+    ).pipe(
+      catchError(this.handleError)
+    );
 
   }
 

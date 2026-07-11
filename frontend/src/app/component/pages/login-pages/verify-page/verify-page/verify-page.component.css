@@ -254,3 +254,13 @@ button:hover {
     margin-bottom: 20px;
 
 }
+
+.switch-text a {
+    color: #ff9500;
+    cursor: pointer;
+}
+
+
+.switch-text span {
+    color: #aaa;
+}
