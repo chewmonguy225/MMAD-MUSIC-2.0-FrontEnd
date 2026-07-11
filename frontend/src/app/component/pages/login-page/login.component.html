@@ -20,6 +20,7 @@
         <form>
 
           <h3>Welcome Back</h3>
+
           <p class="subtitle">
             Log in to continue discovering music.
           </p>
@@ -34,7 +35,11 @@
 
             <label>Username</label>
 
-            <input name="username" [(ngModel)]="loginObj.username" type="username" />
+            <input
+              name="username"
+              [(ngModel)]="loginObj.username"
+              type="text"
+              required />
 
           </div>
 
@@ -43,12 +48,18 @@
 
             <label>Password</label>
 
-            <input name="password" [(ngModel)]="loginObj.password" type="password" />
+            <input
+              name="password"
+              [(ngModel)]="loginObj.password"
+              type="password"
+              required />
 
           </div>
 
 
-          <button type="button" (click)="onLogin()">
+          <button
+            type="button"
+            (click)="onLogin()">
 
             Login
 
@@ -56,10 +67,13 @@
 
 
           <p class="switch-text">
+
             Don't have an account?
+
             <a (click)="switchView(false)">
               Register here
             </a>
+
           </p>
 
 
@@ -90,7 +104,24 @@
 
             <label>Username</label>
 
-            <input name="username" [(ngModel)]="registerObj.username" type="username" />
+            <input
+              name="username"
+              [(ngModel)]="registerObj.username"
+              type="text"
+              required />
+
+          </div>
+
+
+          <div class="input-group">
+
+            <label>Email</label>
+
+            <input
+              name="email"
+              [(ngModel)]="registerObj.email"
+              type="email"
+              required />
 
           </div>
 
@@ -99,12 +130,18 @@
 
             <label>Password</label>
 
-            <input name="password" [(ngModel)]="registerObj.password" type="password" />
+            <input
+              name="password"
+              [(ngModel)]="registerObj.password"
+              type="password"
+              required />
 
           </div>
 
 
-          <button type="button" (click)="onRegister()">
+          <button
+            type="button"
+            (click)="onRegister()">
 
             Register
 
@@ -112,10 +149,13 @@
 
 
           <p class="switch-text">
+
             Already have an account?
+
             <a (click)="switchView(true)">
               Login here
             </a>
+
           </p>
 
 
@@ -132,7 +172,8 @@
     <!-- RIGHT SIDE -->
     <div class="image-panel">
 
-      <img src="https://images.unsplash.com/photo-1526394931762-90052e97b376?q=80&w=1974&auto=format&fit=crop"
+      <img
+        src="https://images.unsplash.com/photo-1526394931762-90052e97b376?q=80&w=1974&auto=format&fit=crop"
         alt="Music" />
 
       <div class="overlay"></div>
@@ -146,10 +187,12 @@
           to be shared.
         </h1>
 
+
         <p>
           Discover albums. Share opinions.
           Connect through sound.
         </p>
+
 
       </div>
 

@@ -1,8 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService, UserDTO } from '../../../service/user/user.service';
 import { NgIf } from '@angular/common';
+import {
+  UserService,
+  RegisterRequest,
+  LoginRequest
+} from '../../../service/user/user.service';
 import { AuthService } from '../../../service/user/auth/auth.service';
 import { LoginResponse } from '../../../core/dto/login-response.model';
 
@@ -25,75 +29,158 @@ export class LoginComponent {
   isLoginView: boolean = false;
   errorMessage: string = '';
 
-  // ✅ properly typed now
-  registerObj: { username: string; password: string } = {
+  registerObj: RegisterRequest = {
+    username: '',
+    email: '',
+    password: ''
+  };
+
+
+  loginObj: LoginRequest = {
     username: '',
     password: ''
   };
 
-  loginObj: { username: string; password: string } = {
-    username: '',
-    password: ''
-  };
 
   onRegister() {
+
     this.errorMessage = '';
 
-    if (!this.registerObj.username || !this.registerObj.password) {
+    if (
+      !this.registerObj.username ||
+      !this.registerObj.email ||
+      !this.registerObj.password
+    ) {
+
       this.errorMessage = 'Please fill out all required fields.';
       return;
+
     }
 
-    this.userService.register(this.registerObj).subscribe({
-      next: () => {
-        alert("Registration success");
-        this.isLoginView = true;
-        this.loginObj.username = this.registerObj.username;
-        this.loginObj.password = '';
-      },
-      error: (err) => {
-        console.error("Registration error:", err);
-        this.errorMessage =
-          err.error?.message ||
-          'Username already taken. Please choose a different one.';
-      }
-    });
+
+    this.userService.register(this.registerObj)
+      .subscribe({
+
+        next: (res) => {
+
+          console.log(
+            'Registration success:',
+            res
+          );
+
+
+          alert(
+            'Account created! Check your email for the verification code.'
+          );
+
+
+          this.router.navigate(
+            ['/verify'],
+            {
+              state: {
+                email: this.registerObj.email
+              }
+            }
+          );
+
+        },
+
+
+        error: (err) => {
+
+          console.error(
+            'Registration error:',
+            err
+          );
+
+
+          this.errorMessage =
+            err.message ||
+            'Registration failed. Please try again.';
+
+        }
+
+      });
+
   }
+
 
   onLogin() {
+
     this.errorMessage = '';
 
-    if (!this.loginObj.username || !this.loginObj.password) {
+    if (
+      !this.loginObj.username ||
+      !this.loginObj.password
+    ) {
+
       this.errorMessage = 'Please fill out all required fields.';
       return;
+
     }
 
-    this.userService.login(this.loginObj).subscribe({
-      next: (res: LoginResponse) => {
 
-        console.log('Login success response:', res);
+    this.userService.login(this.loginObj)
+      .subscribe({
 
-        this.authService.setSession(res.token, res.username);
+        next: (res: LoginResponse) => {
 
-        console.log('Logged in user:', res.username);
 
-        alert("Login success");
+          console.log(
+            'Login success response:',
+            res
+          );
 
-        this.router.navigateByUrl('home');
-      },
 
-      error: (err) => {
-        console.error("Login error:", err);
+          this.authService.setSession(
+            res.token,
+            res.username
+          );
 
-        this.errorMessage =
-          err.error?.message ||
-          'Login failed. Please check your credentials and try again.';
-      }
-    });
+
+          console.log(
+            'Logged in user:',
+            res.username
+          );
+
+
+          alert(
+            'Login success'
+          );
+
+
+          this.router.navigateByUrl(
+            'home'
+          );
+
+        },
+
+
+        error: (err) => {
+
+
+          console.error(
+            'Login error:',
+            err
+          );
+
+
+          this.errorMessage =
+            err.message ||
+            'Login failed. Please check your credentials and try again.';
+
+        }
+
+      });
+
   }
+
 
   switchView(isLogin: boolean) {
+
     this.isLoginView = isLogin;
     this.errorMessage = '';
+
   }
+
 }

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { LoginComponent } from './component/pages/login-page/login.component';
+import { VerifyPageComponent } from './component/pages/verify-page/verify-page/verify-page.component';
 import { BasePageComponent } from './component/pages/base-page/base-page.component';
 
 import { HomePageComponent } from './component/pages/home-page/home-page.component';
@@ -21,7 +22,8 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
 
-  // Login page (only when logged out)
+
+  // Login page
   {
     path: 'login',
     component: LoginComponent,
@@ -29,39 +31,55 @@ export const routes: Routes = [
     canActivate: [guestGuard]
   },
 
+
+  // Email verification page
+  {
+    path: 'verify',
+    component: VerifyPageComponent,
+    title: 'Verify Account'
+  },
+
+
   // Protected pages
   {
     path: '',
     component: BasePageComponent,
     canActivate: [authGuard],
     children: [
+
       {
         path: 'home',
         component: HomePageComponent,
         title: 'Home'
       },
+
       {
         path: 'explore',
         component: ExplorePageComponent,
         title: 'Explore'
       },
+
       {
         path: 'me',
         component: ProfilePageComponent,
         title: 'My Profile'
       },
+
       {
         path: 'profile/:username',
         component: UserProfilePageComponent,
         title: 'User Profile'
       },
+
       {
         path: 'item/:id',
         component: ItemPageComponent,
         title: 'Item'
       }
+
     ]
   },
+
 
   // Catch-all route
   {
