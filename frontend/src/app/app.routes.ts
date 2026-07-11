@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './component/login/login.component';
+import { LoginComponent } from './component/pages/login-page/login.component';
 import { BasePageComponent } from './component/pages/base-page/base-page.component';
 
 import { HomePageComponent } from './component/pages/home-page/home-page.component';

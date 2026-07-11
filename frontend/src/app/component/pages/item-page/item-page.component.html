@@ -10,6 +10,7 @@
       <div class="item-info">
 
         <h1>{{ item.name }}</h1>
+        <h2>{{ item.type }}</h2>
 
         <button class="review-btn" (click)="openReviewModal()">
           Write a Review
@@ -20,52 +21,80 @@
     </div>
 
     <!-- REVIEWS -->
-    <app-review-viewer
-      [reviews]="reviews"
-      [cardComponent]="cardComponent"
-      [isLoading]="isLoading"
+    <app-review-viewer [reviews]="reviews" [cardComponent]="cardComponent" [isLoading]="isLoading"
       [errorMessage]="errorMessage">
     </app-review-viewer>
 
   </section>
 
-  <!-- RIGHT SIDE -->
   <section class="side">
 
-    <!-- Top Tracks -->
-    <div class="side-box">
-      <h3>Top Tracks</h3>
 
-      <div *ngIf="songs.length; else noSongs">
+    <!-- ARTIST PAGE -->
+    <div *ngIf="isArtist" class="side-box">
 
-        <div
-          *ngFor="let song of songs; let i = index"
-          class="track-row">
+      <h3>Albums</h3>
 
-          <span class="track-number">
-            {{ i + 1 }}
-          </span>
+      <div *ngIf="albums.length; else noAlbums" class="album-list">
 
-          <span class="track-name">
-            {{ song.name }}
-          </span>
-
-        </div>
+        <app-album *ngFor="let album of albums" [item]="album">
+        </app-album>
 
       </div>
 
-      <ng-template #noSongs>
-        <p>No tracks available.</p>
+      <ng-template #noAlbums>
+        <p>No albums found.</p>
       </ng-template>
 
     </div>
 
-    <!-- Related -->
-    <div class="side-box">
-      <h3>Related</h3>
-      <p>Content goes here</p>
+
+
+    <!-- ALBUM PAGE -->
+    <div *ngIf="isAlbum" class="side-box">
+
+      <h3>Tracks</h3>
+
+
+      <div *ngIf="songs.length; else noTracks" class="track-list">
+
+        <app-album-songs *ngFor="let song of songs; let i = index" [song]="song" [trackNumber]="i + 1">
+        </app-album-songs>
+
+      </div>
+
+      <ng-template #noTracks>
+
+        <p>No tracks found.</p>
+
+      </ng-template>
+
+
     </div>
 
-  </section>
 
+
+    <!-- SONG PAGE -->
+    <div *ngIf="isSong" class="side-box">
+
+      <h3>Album</h3>
+
+
+      <ng-container *ngIf="song as currentSong">
+
+        <app-album *ngIf="currentSong.album" [item]="currentSong.album">
+        </app-album>
+
+
+        <p *ngIf="!currentSong.album">
+          No album found.
+        </p>
+
+      </ng-container>
+
+
+    </div>
+
+
+  </section>
 </div>

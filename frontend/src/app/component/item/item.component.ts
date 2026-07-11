@@ -25,6 +25,34 @@ export abstract class ItemComponent {
     protected router: Router
   ) { }
 
+  /**
+   * Creates the item in the backend if necessary,
+   * then navigates to its item page.
+   */
+  onItemClick(): void {
+
+    if (!this.item) {
+      return;
+    }
+
+    this.itemService
+      .getOrCreateItem(this.item)
+      .subscribe({
+
+        next: (savedItem) => {
+
+          if (savedItem.id != null) {
+            this.router.navigate(['/item', savedItem.id]);
+          }
+        },
+
+        error: (err) => {
+          console.error('Failed to open item page:', err);
+        }
+
+      });
+  }
+
   abstract onSpotifyClick(): void;
 
 }

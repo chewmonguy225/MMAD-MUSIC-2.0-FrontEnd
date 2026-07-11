@@ -1,4 +1,6 @@
-export type MusicProvider = 'SPOTIFY';
+export type MusicProvider =
+    | 'SPOTIFY'
+    | 'APPLE_MUSIC';
 
 export interface Item {
     id: number | null;

@@ -13,6 +13,8 @@ import { Album } from '../../../core/model/item/album.type';
 import { Artist } from '../../../core/model/item/artist.type';
 import { Song } from '../../../core/model/item/song.type';
 
+import { AlbumComponent } from '../../item/album/album.component';
+import { AlbumSongsComponent } from '../../item/album/album-songs/album-songs/album-songs.component';
 import { SimplifiedSong } from '../../../core/model/page/item-page.type';
 
 @Component({
@@ -20,7 +22,9 @@ import { SimplifiedSong } from '../../../core/model/page/item-page.type';
   standalone: true,
   imports: [
     CommonModule,
-    ReviewViewerComponent
+    ReviewViewerComponent,
+    AlbumComponent,
+    AlbumSongsComponent
   ],
   templateUrl: './item-page.component.html',
   styleUrls: ['./item-page.component.css']
@@ -46,7 +50,7 @@ export class ItemPageComponent implements OnInit {
     private route: ActivatedRoute,
     private pageService: PageService,
     private ui: UiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -69,7 +73,7 @@ export class ItemPageComponent implements OnInit {
     this.pageService.getItemPage(id).subscribe({
 
       next: (res) => {
-
+        console.log(res);
         this.item = res.item;
         this.reviews = res.reviews;
 
@@ -136,5 +140,22 @@ export class ItemPageComponent implements OnInit {
 
   get isSong(): boolean {
     return this.item?.type === 'song';
+  }
+
+  get relatedTitle(): string {
+
+    if (this.isArtist) {
+      return 'Albums';
+    }
+
+    if (this.isAlbum) {
+      return 'Tracks';
+    }
+
+    if (this.isSong) {
+      return 'More Like This';
+    }
+
+    return 'Related';
   }
 }

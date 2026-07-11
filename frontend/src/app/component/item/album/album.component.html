@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-
-<div class="item-card">
+<div class="item-card" (click)="onItemClick()">
 
   <!-- Album Artwork -->
   <div class="image-container">
 
-    <img [src]="album.imageURL" [alt]="album.name || 'Album Image'" class="item-image" />
+    <img [src]="album.imageURL"
+         [alt]="album.name || 'Album Image'"
+         class="item-image" />
 
   </div>
-
 
   <!-- Album Info -->
   <div class="item-info">
@@ -18,20 +18,18 @@
       {{ album.name }}
     </h1>
 
-
     <p class="item-artists" *ngIf="album.artists?.length">
-
       {{ getArtistNames(album) }}
-
     </p>
 
   </div>
 
-
   <!-- Spotify Button -->
   <div class="social-links">
 
-    <a href="#" (click)="onSpotifyClick(); $event.preventDefault()" class="spotify-button">
+    <a href="#"
+       class="spotify-button"
+       (click)="onSpotifyClick(); $event.preventDefault(); $event.stopPropagation()">
 
       <i class="fa fa-spotify"></i>
 
