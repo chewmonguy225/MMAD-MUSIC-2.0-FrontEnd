@@ -1,7 +1,4 @@
 <div class="review-viewer-container">
-  <button class="refresh-btn" (click)="refresh.emit()" [disabled]="isLoading">
-    {{ isLoading ? 'Refreshing...' : 'Refresh Reviews' }}
-  </button>
   <h2>{{ title }}</h2>
 
   <div *ngIf="isLoading" class="loading-indicator">

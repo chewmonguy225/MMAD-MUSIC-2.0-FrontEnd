@@ -1,10 +1,13 @@
-export type MusicProvider = 'SPOTIFY';
-
-export interface Item {
+export interface SearchResult {
     id: number | null;
+  
     sourceId: string;
-    provider: MusicProvider;
+    provider: 'SPOTIFY';
+  
     name: string;
     imageURL: string;
+  
     type: 'artist' | 'album' | 'song' | 'user';
-}
+  
+    artists?: string[];
+  }

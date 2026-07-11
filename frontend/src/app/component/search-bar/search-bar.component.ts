@@ -4,14 +4,22 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Item } from '../../core/model/item/item.type';
-import { UserDTO, UserService } from '../../service/user/user.service';
+import { SearchResult } from '../../core/dto/search/search-result.model';
+
+import { Artist } from '../../core/model/item/artist.type';
+import { Album } from '../../core/model/item/album.type';
+import { Song } from '../../core/model/item/song.type';
+
 import { SearchService } from '../../service/search/search.service';
+import { UserDTO, UserService } from '../../service/user/user.service';
 import { ItemService } from '../../service/item/item/item.service';
+import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
 
 import { AlbumComponent } from '../item/album/album.component';
 import { ArtistComponent } from '../item/artist/artist.component';
 import { SongComponent } from '../item/song/song.component';
 import { UserCardComponent } from '../user-card/user-card.component';
+
 import { Router } from '@angular/router';
 
 @Component({
@@ -32,21 +40,22 @@ export class SearchBarComponent implements OnInit {
   @Output() itemSelected = new EventEmitter<Item>();
 
   private searchSubject = new Subject<string>();
+
   searchQuery = '';
 
-  results: Item[] = [];
-  displayedItems: Item[] = [];
+  results: SearchResult[] = [];
+  displayedItems: SearchResult[] = [];
 
   currentPage = 1;
   itemsPerPage = 5;
 
   searchType: 'artist' | 'album' | 'song' | 'user' | 'all' = 'all';
 
-  // ✅ cache users
   userCache = new Map<string, UserDTO>();
 
   constructor(
     private searchService: SearchService,
+    private spotifyService: SpotifyService,
     private userService: UserService,
     private itemService: ItemService,
     private router: Router
@@ -56,19 +65,18 @@ export class SearchBarComponent implements OnInit {
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe(query => {
-      this.searchQuery = query;
-      this.performSearch();
-    });
+    )
+      .subscribe((query: string) => {
+        this.searchQuery = query;
+        this.performSearch();
+      });
   }
 
-  // INPUT
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchSubject.next(input.value);
   }
 
-  // SEARCH
   performSearch(): void {
 
     const query = this.searchQuery.trim();
@@ -86,73 +94,151 @@ export class SearchBarComponent implements OnInit {
       types = [this.searchType];
     }
 
-    this.searchService.search(query, types).subscribe({
-      next: (response) => {
-        console.log(response)
-        const items = response.items ?? [];
+    this.searchService.search(query, types)
+      .subscribe({
+        next: (response) => {
 
-        this.results = items;
+          const items: SearchResult[] = response.items ?? [];
 
+          this.results = items;
+          console.log(items);
+          this.currentPage = 1;
 
-        this.currentPage = 1;
+          items.forEach((item: SearchResult) => {
 
-        // ✅ PRELOAD USERS HERE (correct place)
-        items.forEach(item => {
-          if (item.type === 'user' && !this.userCache.has(item.name)) {
-            this.userService.getUserByUsername(item.name).subscribe(user => {
-              this.userCache.set(item.name, user);
-            });
-          }
-        });
+            if (
+              item.type === 'user' &&
+              !this.userCache.has(item.name)
+            ) {
+              this.userService
+                .getUserByUsername(item.name)
+                .subscribe((user: UserDTO) => {
+                  this.userCache.set(item.name, user);
+                });
+            }
 
-        this.updateDisplayedItems();
-      },
-      error: (err) => console.error(err)
-    });
+          });
+
+          this.updateDisplayedItems();
+        },
+
+        error: (err: any) => {
+          console.error(err);
+        }
+      });
   }
 
-  // PAGINATION
   updateDisplayedItems(): void {
+
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    this.displayedItems = this.results.slice(start, end);
+
+    this.displayedItems = this.results.slice(
+      start,
+      start + this.itemsPerPage
+    );
   }
 
   nextPage(): void {
+
     if (this.currentPage * this.itemsPerPage < this.results.length) {
       this.currentPage++;
       this.updateDisplayedItems();
     }
+
   }
 
   prevPage(): void {
+
     if (this.currentPage > 1) {
       this.currentPage--;
       this.updateDisplayedItems();
     }
+
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.results.length / this.itemsPerPage);
+    return Math.ceil(
+      this.results.length / this.itemsPerPage
+    );
   }
 
-  // ITEM CLICK
-  selectItem(item: Item): void {
+  selectItem(item: SearchResult): void {
 
-    console.log(item);
-    if (item.type === 'artist' || item.type === 'album' || item.type === 'song') {
-      this.itemService.addItem(item).subscribe({
-        next: (savedItem) => this.itemSelected.emit(savedItem),
-        error: (err) => console.error(err)
-      });
+    if (item.type === 'user') {
+      this.goToUserProfile(item.name);
       return;
     }
 
-    this.itemSelected.emit(item);
+    switch (item.type) {
+
+      case 'artist':
+        this.spotifyService.getArtist(item.sourceId)
+          .subscribe({
+            next: (artist: Artist) => {
+              this.itemService.addItem(artist)
+                .subscribe({
+                  next: (saved: Item) => {
+                    this.itemSelected.emit(saved);
+                  },
+                  error: (err: any) => {
+                    console.error(err);
+                  }
+                });
+            },
+            error: (err: any) => {
+              console.error(err);
+            }
+          });
+        break;
+
+
+      case 'album':
+        this.spotifyService.getAlbum(item.sourceId)
+          .subscribe({
+            next: (album: Album) => {
+              this.itemService.addItem(album)
+                .subscribe({
+                  next: (saved: Item) => {
+                    this.itemSelected.emit(saved);
+                  },
+                  error: (err: any) => {
+                    console.error(err);
+                  }
+                });
+            },
+            error: (err: any) => {
+              console.error(err);
+            }
+          });
+        break;
+
+
+      case 'song':
+        this.spotifyService.getSong(item.sourceId)
+          .subscribe({
+            next: (song: Song) => {
+              this.itemService.addItem(song)
+                .subscribe({
+                  next: (saved: Item) => {
+                    this.itemSelected.emit(saved);
+                  },
+                  error: (err: any) => {
+                    console.error(err);
+                  }
+                });
+            },
+            error: (err: any) => {
+              console.error(err);
+            }
+          });
+        break;
+    }
   }
 
-  // USER NAVIGATION
   goToUserProfile(username: string): void {
-    this.router.navigate(['/profile', username]);
+    this.router.navigate([
+      '/profile',
+      username
+    ]);
   }
 }

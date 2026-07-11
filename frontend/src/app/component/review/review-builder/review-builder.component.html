@@ -5,7 +5,7 @@
 
         <!-- STEP 1: SELECT ITEM (Artist for now) -->
         <div *ngIf="step === 'search'">
-            <h2>Select an Artist</h2>
+            <h2>Select an Item</h2>
 
             <!-- Your search bar emits selected artist -->
             <app-search-bar (itemSelected)="selectItem($event)">

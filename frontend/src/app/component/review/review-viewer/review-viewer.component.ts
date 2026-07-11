@@ -27,17 +27,4 @@ export class ReviewViewerComponent {
   @Input() title: string = 'Reviews';
   @Input() isLoading: boolean = false;
   @Input() errorMessage: string = '';
-
-  // -------------------------
-  // OPTIONAL REFRESH CONTROL
-  // -------------------------
-  @Input() showRefresh: boolean = false;
-  @Output() refresh = new EventEmitter<void>();
-
-  // -------------------------
-  // EVENTS
-  // -------------------------
-  onRefresh(): void {
-    this.refresh.emit();
-  }
 }

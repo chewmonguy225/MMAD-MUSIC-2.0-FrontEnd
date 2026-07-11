@@ -30,4 +30,42 @@ export class UiService {
     this.reviewOpenSubject.next(false);
     this.selectedItemSubject.next(null);
   }
+
+  //Follwowing/Followers
+  private userListSubject = new BehaviorSubject<{
+    open: boolean;
+    title: string;
+    users: string[];
+  }>({
+    open: false,
+    title: '',
+    users: []
+  });
+
+
+  userList$ = this.userListSubject.asObservable();
+
+
+  openUserList(title: string, users: string[]) {
+
+    this.userListSubject.next({
+      open: true,
+      title,
+      users
+    });
+
+  }
+
+
+  closeUserList() {
+
+    this.userListSubject.next({
+      open: false,
+      title: '',
+      users: []
+    });
+
+  }
+
+
 }

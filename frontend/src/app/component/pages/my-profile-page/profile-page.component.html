@@ -1,44 +1,39 @@
-<p class="stats-container" *ngIf="currentUser as user">
-  <span class="username">{{ user.username }}</span>
+<div class="profile-header" *ngIf="currentUser as user">
 
-  <span class="stats">
-    Reviews: {{ reviews?.length || 0 }} |
+  <h2 class="username">
+    {{ user.username }}
+  </h2>
+
+  <div class="stats">
+
+    <span>
+      Reviews:
+      <strong>{{ reviews?.length || 0 }}</strong>
+    </span>
+
+    <span class="divider">|</span>
 
     <button mat-button (click)="openUserList('Followers', user.followers || [])">
-      Followers: {{ user.followers?.length || 0 }}
+      Followers:
+      <strong>{{ user.followers?.length || 0 }}</strong>
     </button>
+
+    <span class="divider">|</span>
 
     <button mat-button (click)="openUserList('Following', user.following || [])">
-      Following: {{ user.following?.length || 0 }}
+      Following:
+      <strong>{{ user.following?.length || 0 }}</strong>
     </button>
-  </span>
-</p>
 
-<app-review-viewer
-  [reviews]="reviews ?? []"
-  [isLoading]="isLoading"
-  [cardComponent]="cardComponent"
-  [errorMessage]="errorMessage"
-  (refresh)="currentUser && loadMyReviews(currentUser.username)">
-</app-review-viewer>
-
-<!-- 👇 USER LIST PANEL -->
-<div *ngIf="showUserList" class="user-list-panel">
-
-  <h3>{{ listTitle }}</h3>
-
-  <div *ngIf="listUsers.length > 0; else empty">
-    <div *ngFor="let u of listUsers">
-      {{ u }}
-    </div>
   </div>
 
-  <ng-template #empty>
-    <p>No users found</p>
-  </ng-template>
-
-  <button mat-button (click)="showUserList = false">
-    Close
-  </button>
-
 </div>
+
+
+<app-review-viewer [reviews]="reviews ?? []" [isLoading]="isLoading" [cardComponent]="cardComponent"
+  [errorMessage]="errorMessage" (refresh)="currentUser && loadMyReviews(currentUser.username)">
+</app-review-viewer>
+
+<button class="logout-btn" (click)="logout()">
+  Logout
+</button>

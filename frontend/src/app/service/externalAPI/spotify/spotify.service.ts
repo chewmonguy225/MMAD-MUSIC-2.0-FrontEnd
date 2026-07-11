@@ -13,24 +13,24 @@ import { ExternalAPIService } from '../external-api.service';
 export class SpotifyService extends ExternalAPIService {
   protected override apiUrl = 'http://localhost:8080/spotify/';
 
-  constructor(protected override http: HttpClient) { 
-    super(http); 
+  constructor(protected override http: HttpClient) {
+    super(http);
   }
 
   override searchItem(itemName: string): Observable<Item[]> {
     return this.http.get<Item[]>(`${this.apiUrl}search/item/${itemName}`);
   }
 
-  override searchArtist(artistName: string): Observable<Artist[]> {
-    return this.http.get<Artist[]>(`${this.apiUrl}search/artist/${artistName}`);
+  getArtist(sourceId: string): Observable<Artist> {
+    return this.http.get<Artist>(`${this.apiUrl}artist/${sourceId}`);
   }
 
-  override searchAlbum(albumName: string): Observable<Album[]> {
-    return this.http.get<Album[]>(`${this.apiUrl}search/album/${albumName}`);
+  getAlbum(sourceId: string): Observable<Album> {
+    return this.http.get<Album>(`${this.apiUrl}album/${sourceId}`);
   }
 
-  override searchSong(songName: string): Observable<Song[]> {
-    return this.http.get<Song[]>(`${this.apiUrl}search/song/${songName}`);
+  getSong(sourceId: string): Observable<Song> {
+    return this.http.get<Song>(`${this.apiUrl}song/${sourceId}`);
   }
 
 

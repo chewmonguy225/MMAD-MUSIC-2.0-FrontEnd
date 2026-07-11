@@ -7,7 +7,7 @@ import { UiService } from '../../../service/ui/ui.service';
 import { Review } from '../../../core/model/review/review.type';
 import { MatDialog } from '@angular/material/dialog';
 import { UserListDialogComponent } from '../../user-list-dialog/user-list-dialog.component';
-
+import { AuthService } from '../../../service/user/auth/auth.service';
 @Component({
   selector: 'app-profile-page',
   standalone: true,
@@ -30,15 +30,18 @@ export class ProfilePageComponent implements OnInit {
   listUsers: string[] = [];
 
   constructor(
+    private dialog: MatDialog,
     private reviewService: ReviewService,
     private userService: UserService,
-    private ui: UiService
-  ) {}
+    private ui: UiService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.userService.getMyProfile().subscribe(user => {
       this.currentUser = user;
 
+      console.log(user);
       if (user?.username) {
         this.loadMyReviews(user.username);
       }
@@ -61,11 +64,20 @@ export class ProfilePageComponent implements OnInit {
     });
   }
 
-  openUserList(type: string, users: string[]): void {
-    console.log('CLICK:', type, users);
+  openUserList(title: string, users: string[]) {
 
-    this.listTitle = type;
-    this.listUsers = users ?? [];
-    this.showUserList = true;
+    this.dialog.open(UserListDialogComponent, {
+      width: '400px',
+      data: {
+        title,
+        users
+      }
+    });
+
+  }
+
+  logout(): void {
+    this.currentUser = null;
+    this.authService.logout();
   }
 }

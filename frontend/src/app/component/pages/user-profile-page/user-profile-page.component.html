@@ -1,37 +1,64 @@
-<p class="stats-container" *ngIf="user as u">
-    <span class="username">{{ u.username }}</span>
-  
-    <span class="stats">
-      Reviews: {{ reviews?.length || 0 }} |
-  
-      <button mat-button (click)="openUserList('Followers', u.followers || [])">
+<div class="profile-header" *ngIf="user as u">
+
+  <div class="profile-info">
+
+    <h2 class="username">
+      {{ u.username }}
+    </h2>
+
+    <div class="stats">
+
+      <span>
+        Reviews: {{ reviews?.length || 0 }}
+      </span>
+
+
+      <button 
+        mat-button
+        (click)="openUserList('Followers', u.followers || [])">
         Followers: {{ u.followers?.length || 0 }}
       </button>
-  
-      <button mat-button (click)="openUserList('Following', u.following || [])">
+
+
+      <button 
+        mat-button
+        (click)="openUserList('Following', u.following || [])">
         Following: {{ u.following?.length || 0 }}
       </button>
-  
-      <!-- ✅ FOLLOW BUTTON (optional but now consistent) -->
+
+
+      <!-- Follow / Unfollow -->
       <ng-container *ngIf="currentUser && currentUser.username !== u.username">
-  
-        <button mat-button *ngIf="!isFollowing" (click)="follow()">
+
+        <button 
+          mat-button
+          *ngIf="!isFollowing"
+          (click)="follow()">
           Follow
         </button>
-  
-        <button mat-button *ngIf="isFollowing" (click)="unfollow()">
+
+
+        <button 
+          mat-button
+          *ngIf="isFollowing"
+          (click)="unfollow()">
           Unfollow
         </button>
-  
+
       </ng-container>
-  
-    </span>
-  </p>
-  
-  <app-review-viewer
-    [reviews]="reviews ?? []"
-    [isLoading]="isLoading"
-    [cardComponent]="cardComponent"
-    [errorMessage]="errorMessage"
-    (refresh)="user && loadReviews(user.username)">
-  </app-review-viewer>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Reviews -->
+<app-review-viewer
+  [reviews]="reviews ?? []"
+  [isLoading]="isLoading"
+  [cardComponent]="cardComponent"
+  [errorMessage]="errorMessage"
+  (refresh)="user && loadReviews(user.username)">
+</app-review-viewer>
