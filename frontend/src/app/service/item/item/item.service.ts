@@ -9,7 +9,7 @@ import { Album } from '../../../core/model/item/album.type';
 
 
 type SpecificItemInstance = Artist | Album; //song;
-type ItemTypeName = 'ARTIST' | 'SONG' | 'ALBUM'; 
+type ItemTypeName = 'ARTIST' | 'SONG' | 'ALBUM';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +18,18 @@ export class ItemService {
 
   protected apiUrl = 'http://localhost:8080/item';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+  
+  addItem(request: {
+    sourceId: string;
+    type: string;
+    provider: string;
+  }): Observable<Item> {
 
-  // CREATE
-  addItem(item: Item): Observable<Item> {
-    return this.http.post<Item>(`${this.apiUrl}/add`, item);
+    return this.http.post<Item>(
+      `${this.apiUrl}/add`,
+      request
+    );
   }
 
   // READ

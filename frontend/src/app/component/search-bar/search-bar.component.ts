@@ -6,14 +6,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Item } from '../../core/model/item/item.type';
 import { SearchResult } from '../../core/dto/search/search-result.model';
 
-import { Artist } from '../../core/model/item/artist.type';
-import { Album } from '../../core/model/item/album.type';
-import { Song } from '../../core/model/item/song.type';
-
 import { SearchService } from '../../service/search/search.service';
 import { UserDTO, UserService } from '../../service/user/user.service';
 import { ItemService } from '../../service/item/item/item.service';
-import { SpotifyService } from '../../service/externalAPI/spotify/spotify.service';
 
 import { AlbumComponent } from '../item/album/album.component';
 import { ArtistComponent } from '../item/artist/artist.component';
@@ -55,7 +50,6 @@ export class SearchBarComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private spotifyService: SpotifyService,
     private userService: UserService,
     private itemService: ItemService,
     private router: Router
@@ -169,72 +163,29 @@ export class SearchBarComponent implements OnInit {
       return;
     }
 
-    switch (item.type) {
 
-      case 'artist':
-        this.spotifyService.getArtist(item.sourceId)
-          .subscribe({
-            next: (artist: Artist) => {
-              this.itemService.addItem(artist)
-                .subscribe({
-                  next: (saved: Item) => {
-                    this.itemSelected.emit(saved);
-                  },
-                  error: (err: any) => {
-                    console.error(err);
-                  }
-                });
-            },
-            error: (err: any) => {
-              console.error(err);
-            }
-          });
-        break;
+    const request: Item = {
+      id: null,
+      sourceId: item.sourceId,
+      name: item.name,
+      imageURL: item.imageURL,
+      type: item.type,
+      provider: item.provider
+    };
 
 
-      case 'album':
-        this.spotifyService.getAlbum(item.sourceId)
-          .subscribe({
-            next: (album: Album) => {
-              this.itemService.addItem(album)
-                .subscribe({
-                  next: (saved: Item) => {
-                    this.itemSelected.emit(saved);
-                  },
-                  error: (err: any) => {
-                    console.error(err);
-                  }
-                });
-            },
-            error: (err: any) => {
-              console.error(err);
-            }
-          });
-        break;
-
-
-      case 'song':
-        this.spotifyService.getSong(item.sourceId)
-          .subscribe({
-            next: (song: Song) => {
-              this.itemService.addItem(song)
-                .subscribe({
-                  next: (saved: Item) => {
-                    this.itemSelected.emit(saved);
-                  },
-                  error: (err: any) => {
-                    console.error(err);
-                  }
-                });
-            },
-            error: (err: any) => {
-              console.error(err);
-            }
-          });
-        break;
-    }
+    this.itemService.addItem(request)
+      .subscribe({
+        next: (saved: Item) => {
+          this.itemSelected.emit(saved);
+          console.log(saved);
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
   }
-
+  
   goToUserProfile(username: string): void {
     this.router.navigate([
       '/profile',
