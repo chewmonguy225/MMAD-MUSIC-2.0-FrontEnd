@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -32,6 +32,7 @@ import { Router } from '@angular/router';
 })
 export class SearchBarComponent implements OnInit {
 
+  @Input() navigateOnItemSelect = true;
   @Output() itemSelected = new EventEmitter<Item>();
 
   private searchSubject = new Subject<string>();
@@ -163,7 +164,6 @@ export class SearchBarComponent implements OnInit {
       return;
     }
 
-
     const request: Item = {
       id: null,
       sourceId: item.sourceId,
@@ -173,19 +173,24 @@ export class SearchBarComponent implements OnInit {
       provider: item.provider
     };
 
-
     this.itemService.addItem(request)
       .subscribe({
         next: (saved: Item) => {
-          this.itemSelected.emit(saved);
-          console.log(saved);
+
+          if (this.navigateOnItemSelect) {
+            this.router.navigate(['/item', saved.id]);
+          } else {
+            this.itemSelected.emit(saved);
+          }
+
         },
         error: (err) => {
           console.error(err);
         }
       });
+
   }
-  
+
   goToUserProfile(username: string): void {
     this.router.navigate([
       '/profile',

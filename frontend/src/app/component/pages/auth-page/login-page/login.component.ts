@@ -11,14 +11,20 @@ import {
 
 import { AuthService } from '../../../../service/user/auth/auth.service';
 import { LoginResponse } from '../../../../core/dto/login-response.model';
+import { isValidEmail, isValidPassword, validatePassword } from '../../../../core/utils/form-validator';
 
-
+import { AuthPageComponent } from '../auth-page/auth-page.component';
+import { PasswordInputComponent } from '../../../password/password-input/password-input/password-input.component';
+import { PasswordRulesComponent } from '../../../password/password-rules/password-rules/password-rules.component';
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     FormsModule,
-    NgIf
+    NgIf,
+    AuthPageComponent,
+    PasswordInputComponent,
+    PasswordRulesComponent
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -29,44 +35,33 @@ export class LoginComponent {
   userService = inject(UserService);
   authService = inject(AuthService);
 
-
   isLoginView: boolean = true;
-
 
   showLoginPassword: boolean = false;
   showRegisterPassword: boolean = false;
   showConfirmPassword: boolean = false;
 
-
   errorMessage: string = '';
   successMessage: string = '';
-
 
   registerObj: RegisterRequest & {
     confirmPassword: string;
   } = {
-
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-
-  };
-
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    };
 
   loginObj: LoginRequest = {
-
-    username: '',
+    login: '',
     password: ''
-
   };
-
 
   onRegister() {
 
     this.errorMessage = '';
     this.successMessage = '';
-
 
     if (
       !this.registerObj.username ||
@@ -82,6 +77,21 @@ export class LoginComponent {
 
     }
 
+    if (!isValidEmail(this.registerObj.email)) {
+
+      this.errorMessage =
+        'Please enter a valid email address.';
+
+      return;
+
+    }
+
+    if (!isValidPassword(this.registerObj.password)) {
+      this.errorMessage =
+        'Password does not meet the requirements.';
+      return;
+
+    }
 
     if (
       this.registerObj.password !==
@@ -94,23 +104,16 @@ export class LoginComponent {
       return;
 
     }
-
-
     this.userService.register({
 
       username: this.registerObj.username,
       email: this.registerObj.email,
       password: this.registerObj.password
 
-    })
-    .subscribe({
-
+    }).subscribe({
       next: () => {
-
         this.successMessage =
           'Account created! Check your email for the verification code.';
-
-
         this.router.navigate(
           ['/verify'],
           {
@@ -119,88 +122,68 @@ export class LoginComponent {
             }
           }
         );
-
       },
-
-
       error: (err) => {
-
         this.errorMessage =
           err.message ||
           'Registration failed. Please try again.';
-
       }
-
     });
-
   }
 
-
   onLogin() {
-
     this.errorMessage = '';
     this.successMessage = '';
 
-
     if (
-      !this.loginObj.username ||
+      !this.loginObj.login ||
       !this.loginObj.password
     ) {
-
-      this.errorMessage =
-        'Please fill out all required fields.';
-
+      this.errorMessage = 'Please fill out all required fields.';
       return;
-
     }
-
 
     this.userService.login(this.loginObj)
       .subscribe({
-
         next: (res: LoginResponse) => {
 
           this.authService.setSession(
             res.token,
             res.username
           );
-
-
-          this.router.navigateByUrl(
-            'home'
-          );
-
+        
+          console.log(res);
+        
+          this.router.navigateByUrl('home');
+        
         },
 
-
         error: (err) => {
-
           this.errorMessage =
             err.message ||
             'Login failed. Please check your credentials and try again.';
-
         }
-
       });
-
   }
-
 
   switchView(isLogin: boolean) {
-
     this.isLoginView = isLogin;
-
     this.errorMessage = '';
     this.successMessage = '';
-
   }
 
-
   goToForgotPassword() {
-
     this.router.navigate([
       '/forgot-password'
     ]);
+  }
+
+  isValidEmail(email: string): boolean {
+
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return emailPattern.test(email);
 
   }
 

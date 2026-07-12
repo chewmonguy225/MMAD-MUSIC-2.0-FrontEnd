@@ -1,5 +1,11 @@
 <div class="profile-header" *ngIf="currentUser as user">
 
+  <img
+    class="profile-picture"
+    [src]="user.profilePicUrl"
+    alt="Profile picture"
+  />
+
   <h2 class="username">
     {{ user.username }}
   </h2>
@@ -30,8 +36,12 @@
 </div>
 
 
-<app-review-viewer [reviews]="reviews ?? []" [isLoading]="isLoading" [cardComponent]="cardComponent"
-  [errorMessage]="errorMessage" (refresh)="currentUser && loadMyReviews(currentUser.username)">
+<app-review-viewer
+  [reviews]="reviews ?? []"
+  [isLoading]="isLoading"
+  [cardComponent]="cardComponent"
+  [errorMessage]="errorMessage"
+  (refresh)="currentUser && loadMyReviews(currentUser.username)">
 </app-review-viewer>
 
 <button class="logout-btn" (click)="logout()">

@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { UserService } from '../../../../../service/user/user.service';
+import { UserService } from '../../../../service/user/user.service';
+import { AuthPageComponent } from '../auth-page/auth-page.component';
 
 
 @Component({
@@ -12,7 +13,8 @@ import { UserService } from '../../../../../service/user/user.service';
   standalone: true,
   imports: [
     FormsModule,
-    NgIf
+    NgIf,
+    AuthPageComponent
   ],
   templateUrl: './verify-page.component.html',
   styleUrls: ['./verify-page.component.css']

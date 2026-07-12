@@ -104,34 +104,48 @@ export class UserProfilePageComponent implements OnInit {
 
   follow(): void {
     if (!this.currentUser || !this.user) return;
-
+  
     this.userService.followUser(
       this.currentUser.username,
       this.user.username
     ).subscribe({
       next: () => {
+  
         this.isFollowing = true;
-
+  
         this.currentUser!.following ??= [];
         this.currentUser!.following.push(this.user!.username);
+  
+  
+        this.user!.followers ??= [];
+        this.user!.followers.push(this.currentUser!.username);
+  
       }
     });
   }
 
   unfollow(): void {
     if (!this.currentUser || !this.user) return;
-
+  
     this.userService.unfollowUser(
       this.currentUser.username,
       this.user.username
     ).subscribe({
       next: () => {
+  
         this.isFollowing = false;
-
+  
         this.currentUser!.following =
           this.currentUser!.following?.filter(
             u => u !== this.user!.username
           ) ?? [];
+  
+  
+        this.user!.followers =
+          this.user!.followers?.filter(
+            u => u !== this.currentUser!.username
+          ) ?? [];
+  
       }
     });
   }

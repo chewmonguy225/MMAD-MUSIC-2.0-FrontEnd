@@ -16,7 +16,8 @@ import { Item } from '../../core/model/item/item.type';
 export abstract class ItemComponent {
 
   @Input() item: Item | null = null;
-
+  @Input() navigateOnClick = true;
+  
   showReviewButton = false;
   showReviewInput = false;
 

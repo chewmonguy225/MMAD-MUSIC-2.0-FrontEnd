@@ -13,7 +13,7 @@ export interface RegisterRequest {
 
 
 export interface LoginRequest {
-  username: string;
+  login: string;
   password: string;
 }
 
@@ -44,6 +44,7 @@ export interface MessageResponse {
 
 export interface UserDTO {
   username: string;
+  profilePicUrl: string;
   followers?: string[];
   following?: string[];
 }

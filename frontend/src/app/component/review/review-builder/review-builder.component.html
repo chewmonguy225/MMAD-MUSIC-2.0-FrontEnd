@@ -8,7 +8,7 @@
             <h2>Select an Item</h2>
 
             <!-- Your search bar emits selected artist -->
-            <app-search-bar (itemSelected)="selectItem($event)">
+            <app-search-bar [navigateOnItemSelect]="false" (itemSelected)="selectItem($event)">
             </app-search-bar>
         </div>
 

@@ -4,6 +4,7 @@ import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../../../../service/user/user.service';
+import { AuthPageComponent } from '../../auth-page/auth-page.component';
 
 
 @Component({
@@ -11,7 +12,8 @@ import { UserService } from '../../../../../service/user/user.service';
   standalone: true,
   imports: [
     FormsModule,
-    NgIf
+    NgIf,
+    AuthPageComponent
   ],
   templateUrl: './forgot-password-page.component.html',
   styleUrls: ['./forgot-password-page.component.css']

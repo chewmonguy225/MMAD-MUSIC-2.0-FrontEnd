@@ -43,10 +43,4 @@ export class HeaderComponent {
   closeModal() {
     this.ui.closeReviewBuilder();
   }
-
-  logout(): void {
-    this.authService.logout();
-    this.currentUsername.set(null);
-    this.router.navigate(['/login']);
-  }
 }

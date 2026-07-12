@@ -1,0 +1,11 @@
+/* parent component/page */
+:host {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  app-review-viewer {
+    flex: 1;
+    min-height: 0;
+  }

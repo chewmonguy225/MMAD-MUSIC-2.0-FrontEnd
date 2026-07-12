@@ -2,50 +2,59 @@
 
   <div class="profile-info">
 
+    <img class="profile-picture" [src]="u.profilePicUrl" alt="Profile picture" />
+
     <h2 class="username">
       {{ u.username }}
     </h2>
 
+
     <div class="stats">
 
       <span>
-        Reviews: {{ reviews?.length || 0 }}
+        Reviews:
+        <strong>{{ reviews?.length || 0 }}</strong>
       </span>
 
 
-      <button 
-        mat-button
-        (click)="openUserList('Followers', u.followers || [])">
-        Followers: {{ u.followers?.length || 0 }}
+      <span class="divider">|</span>
+
+
+      <button mat-button (click)="openUserList('Followers', u.followers || [])">
+
+        Followers:
+        <strong>{{ u.followers?.length || 0 }}</strong>
+
       </button>
 
 
-      <button 
-        mat-button
-        (click)="openUserList('Following', u.following || [])">
-        Following: {{ u.following?.length || 0 }}
+      <span class="divider">|</span>
+
+
+      <button mat-button (click)="openUserList('Following', u.following || [])">
+
+        Following:
+        <strong>{{ u.following?.length || 0 }}</strong>
+
       </button>
 
 
-      <!-- Follow / Unfollow -->
       <ng-container *ngIf="currentUser && currentUser.username !== u.username">
 
-        <button 
-          mat-button
-          *ngIf="!isFollowing"
-          (click)="follow()">
+        <span class="divider">|</span>
+
+
+        <button mat-button *ngIf="!isFollowing" (click)="follow()">
           Follow
         </button>
 
 
-        <button 
-          mat-button
-          *ngIf="isFollowing"
-          (click)="unfollow()">
+        <button mat-button *ngIf="isFollowing" (click)="unfollow()">
           Unfollow
         </button>
 
       </ng-container>
+
 
     </div>
 
@@ -54,11 +63,6 @@
 </div>
 
 
-<!-- Reviews -->
-<app-review-viewer
-  [reviews]="reviews ?? []"
-  [isLoading]="isLoading"
-  [cardComponent]="cardComponent"
-  [errorMessage]="errorMessage"
-  (refresh)="user && loadReviews(user.username)">
+<app-review-viewer [reviews]="reviews ?? []" [isLoading]="isLoading" [cardComponent]="cardComponent"
+  [errorMessage]="errorMessage" (refresh)="user && loadReviews(user.username)">
 </app-review-viewer>
