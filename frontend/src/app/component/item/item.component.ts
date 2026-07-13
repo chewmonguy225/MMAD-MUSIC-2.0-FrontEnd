@@ -1,59 +1,115 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ItemService } from '../../service/item/item/item.service';
 import { Item } from '../../core/model/item/item.type';
+import { Artist } from '../../core/model/item/artist.type';
+import { Album } from '../../core/model/item/album.type';
+import { Song } from '../../core/model/item/song.type';
+
+import { ItemCardSkeletonComponent } from './item-card-skeleton/item-card-skeleton.component';
 
 @Component({
-  selector: 'app-item',
-  standalone: true,
-  imports: [FormsModule, CommonModule],
-  templateUrl: './item.component.html',
-  styleUrl: './item.component.css'
+  selector:'app-item-card',
+  standalone:true,
+  imports:[
+    CommonModule,
+    ItemCardSkeletonComponent
+  ],
+  templateUrl:'./item.component.html',
+  styleUrl:'./item.component.css'
 })
-export abstract class ItemComponent {
+export class ItemCardComponent {
 
-  @Input() item: Item | null = null;
+  @Input() item!: Item;
+
+  @Input() imageShape?: 'circle' | 'square';
+
+  @Input() showArtists = false;
+
   @Input() navigateOnClick = true;
-  
-  showReviewButton = false;
-  showReviewInput = false;
+
+  isLoading = true;
+
 
   constructor(
-    protected itemService: ItemService,
-    protected router: Router
+    private itemService: ItemService,
+    private router: Router
   ) { }
 
-  /**
-   * Creates the item in the backend if necessary,
-   * then navigates to its item page.
-   */
+
+  ngOnInit(): void {
+
+      this.isLoading = false;
+
+  }
+
+
+  get resolvedImageShape(): 'circle' | 'square' {
+
+    if (this.imageShape) {
+      return this.imageShape;
+    }
+
+    return this.item?.type === 'artist'
+      ? 'circle'
+      : 'square';
+
+  }
+
+
   onItemClick(): void {
 
-    if (!this.item) {
+    if (!this.item || !this.navigateOnClick) {
       return;
     }
 
-    this.itemService
-      .getOrCreateItem(this.item)
+    this.itemService.getOrCreateItem(this.item)
       .subscribe({
 
-        next: (savedItem) => {
+        next:(savedItem)=>{
 
-          if (savedItem.id != null) {
-            this.router.navigate(['/item', savedItem.id]);
+          if(savedItem.id != null){
+
+            this.router.navigate([
+              '/item',
+              savedItem.id
+            ]);
+
           }
-        },
 
-        error: (err) => {
-          console.error('Failed to open item page:', err);
         }
 
       });
+
   }
 
-  abstract onSpotifyClick(): void;
+
+  getArtistNames(): string {
+
+    if(!this.showArtists){
+      return '';
+    }
+
+    if(this.item.type !== 'album' && this.item.type !== 'song'){
+      return '';
+    }
+
+    const item = this.item as Album | Song;
+
+    return item.artists
+      ?.map((artist:Artist)=>artist.name)
+      .join(', ') ?? '';
+
+  }
+
+
+  onSpotifyClick(event:MouseEvent):void{
+
+    event.preventDefault();
+    event.stopPropagation();
+
+  }
 
 }

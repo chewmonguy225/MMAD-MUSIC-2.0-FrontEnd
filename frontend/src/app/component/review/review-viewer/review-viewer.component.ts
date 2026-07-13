@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { CommonModule, NgComponentOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ReviewCardComponent } from '../global-review-card/review-card.component';
 import { ItemReviewCardComponent } from '../item-reviews-card/item-reviews-card.component';
+import { ReviewCardSkeletonComponent } from '../global-review-card/review-card-skeleton/review-card-skeleton.component';
 
 @Component({
   selector: 'app-review-viewer',
@@ -9,22 +10,29 @@ import { ItemReviewCardComponent } from '../item-reviews-card/item-reviews-card.
   imports: [
     CommonModule,
     ReviewCardComponent,
-    ItemReviewCardComponent
+    ItemReviewCardComponent,
+    ReviewCardSkeletonComponent
   ],
   templateUrl: './review-viewer.component.html',
-  styleUrls: ['./review-viewer.component.css']
+  styleUrls: ['./review-viewer.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReviewViewerComponent {
 
-  // -------------------------
-  // INPUTS
-  // -------------------------
-  @Input() reviews: any[] = [];
+  @Input() reviews: any[] | null = null;
 
-  // Dynamic card component (ReviewCard or ItemReviewCard)
   @Input() cardComponent!: String;
 
   @Input() title: string = 'Reviews';
+
   @Input() isLoading: boolean = false;
+
   @Input() errorMessage: string = '';
+
+  skeletonCards = [1, 2, 3];
+
+  trackByReview(index: number, review: any): number {
+    return review.id;
+  }
+
 }

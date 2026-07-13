@@ -23,7 +23,6 @@ export class ExplorePageComponent {
   ) {}
 
   onItemSelected(item: any) {
-    console.log(item.id);
     this.router.navigate(['/item', item.id]);
   }
 }

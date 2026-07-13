@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TestItemComponent } from './test-item.component';
+import { TestItemComponent } from './test-item.component'
 
 describe('TestItemComponent (derived from ItemComponent)', () => {
   let component: TestItemComponent;

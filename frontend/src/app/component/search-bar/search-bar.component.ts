@@ -1,6 +1,6 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Item } from '../../core/model/item/item.type';
@@ -10,9 +10,7 @@ import { SearchService } from '../../service/search/search.service';
 import { UserDTO, UserService } from '../../service/user/user.service';
 import { ItemService } from '../../service/item/item/item.service';
 
-import { AlbumComponent } from '../item/album/album.component';
-import { ArtistComponent } from '../item/artist/artist.component';
-import { SongComponent } from '../item/song/song.component';
+import { ItemCardComponent } from '../item/item.component';
 import { UserCardComponent } from '../user-card/user-card.component';
 
 import { Router } from '@angular/router';
@@ -22,30 +20,27 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    ArtistComponent,
-    AlbumComponent,
-    SongComponent,
+    ItemCardComponent,
     UserCardComponent
   ],
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent implements OnInit, OnDestroy {
 
   @Input() navigateOnItemSelect = true;
+  @Input() includeUsers = true;
   @Output() itemSelected = new EventEmitter<Item>();
 
   private searchSubject = new Subject<string>();
+  private searchSub?: Subscription;
 
   searchQuery = '';
+  isSearching = false;
 
   results: SearchResult[] = [];
-  displayedItems: SearchResult[] = [];
 
-  currentPage = 1;
-  itemsPerPage = 5;
-
-  searchType: 'artist' | 'album' | 'song' | 'user' | 'all' = 'all';
+  selectedTypes: string[] = [];
 
   userCache = new Map<string, UserDTO>();
 
@@ -57,108 +52,98 @@ export class SearchBarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    )
+    this.searchSub = this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
       .subscribe((query: string) => {
         this.searchQuery = query;
         this.performSearch();
       });
   }
+  ngOnDestroy(): void {
+    this.searchSub?.unsubscribe();
+  }
 
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchSubject.next(input.value);
+
+    if (!input.value.trim()) {
+      this.results = [];
+    }
+  }
+
+  toggleType(type: string): void {
+    if (this.selectedTypes.includes(type)) {
+      this.selectedTypes = this.selectedTypes.filter(t => t !== type);
+    } else {
+      this.selectedTypes.push(type);
+    }
+
+    this.performSearch();
+  }
+
+  isTypeSelected(type: string): boolean {
+    return this.selectedTypes.includes(type);
   }
 
   performSearch(): void {
-
     const query = this.searchQuery.trim();
 
     if (!query) {
       this.results = [];
-      this.displayedItems = [];
-      this.currentPage = 1;
+      this.isSearching = false;
       return;
     }
 
+    this.isSearching = true;
+
     let types: string[] | undefined;
 
-    if (this.searchType !== 'all') {
-      types = [this.searchType];
+    if (this.selectedTypes.length > 0) {
+      types = [...this.selectedTypes];
+    }
+
+    if (!this.includeUsers) {
+      types = types
+        ? types.filter(type => type !== 'user')
+        : ['artist', 'album', 'song'];
     }
 
     this.searchService.search(query, types)
       .subscribe({
         next: (response) => {
 
-          const items: SearchResult[] = response.items ?? [];
+          const items = response.items ?? [];
 
           this.results = items;
-          console.log(items);
-          this.currentPage = 1;
+          this.isSearching = false;
 
-          items.forEach((item: SearchResult) => {
+          items.forEach(item => {
 
             if (
               item.type === 'user' &&
               !this.userCache.has(item.name)
             ) {
+
               this.userService
                 .getUserByUsername(item.name)
-                .subscribe((user: UserDTO) => {
+                .subscribe(user => {
                   this.userCache.set(item.name, user);
                 });
             }
-
           });
-
-          this.updateDisplayedItems();
         },
-
-        error: (err: any) => {
+        error: (err) => {
           console.error(err);
+          this.isSearching = false;
         }
       });
   }
 
-  updateDisplayedItems(): void {
-
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-
-    this.displayedItems = this.results.slice(
-      start,
-      start + this.itemsPerPage
-    );
-  }
-
-  nextPage(): void {
-
-    if (this.currentPage * this.itemsPerPage < this.results.length) {
-      this.currentPage++;
-      this.updateDisplayedItems();
-    }
-
-  }
-
-  prevPage(): void {
-
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.updateDisplayedItems();
-    }
-
-  }
-
-  getTotalPages(): number {
-    return Math.ceil(
-      this.results.length / this.itemsPerPage
-    );
-  }
-
   selectItem(item: SearchResult): void {
-
     if (item.type === 'user') {
       this.goToUserProfile(item.name);
       return;
@@ -176,19 +161,19 @@ export class SearchBarComponent implements OnInit {
     this.itemService.addItem(request)
       .subscribe({
         next: (saved: Item) => {
-
           if (this.navigateOnItemSelect) {
-            this.router.navigate(['/item', saved.id]);
+            this.router.navigate([
+              '/item',
+              saved.id
+            ]);
           } else {
             this.itemSelected.emit(saved);
           }
-
         },
         error: (err) => {
           console.error(err);
         }
       });
-
   }
 
   goToUserProfile(username: string): void {
@@ -196,5 +181,10 @@ export class SearchBarComponent implements OnInit {
       '/profile',
       username
     ]);
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.results = [];
   }
 }

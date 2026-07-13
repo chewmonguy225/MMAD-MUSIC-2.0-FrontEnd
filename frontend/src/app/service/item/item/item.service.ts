@@ -68,7 +68,7 @@ export class ItemService {
   openItem(
     item: Pick<Item, 'sourceId' | 'type' | 'provider' | 'name' | 'imageURL'>
   ): void {
-
+    console.log('Sending item:', item);
     this.getOrCreateItem({
 
       sourceId: item.sourceId,

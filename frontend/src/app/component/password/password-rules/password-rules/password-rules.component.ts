@@ -9,14 +9,9 @@ import { validatePassword } from '../../../../core/utils/form-validator';
   styleUrls: ['./password-rules.component.css']
 })
 
-export class PasswordRulesComponent implements OnChanges{
+export class PasswordRulesComponent{
 
   @Input() password = '';
-
-
-  ngOnChanges() {
-    console.log('Password received:', this.password);
-  }
 
   get rules() {
 

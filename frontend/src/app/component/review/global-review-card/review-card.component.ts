@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TimeAgoPipe } from '../../../core/pipe/time-ago.pipe';
@@ -14,12 +14,12 @@ import { Item } from '../../../core/model/item/item.type';
   standalone: true,
   imports: [CommonModule, RouterModule, TimeAgoPipe],
   templateUrl: './review-card.component.html',
-  styleUrl: './review-card.component.css'
+  styleUrl: './review-card.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReviewCardComponent {
+export class ReviewCardComponent{
 
   @Input() review!: Review;
-
 
   // -------------------------
   // TYPE GUARDS
@@ -29,13 +29,16 @@ export class ReviewCardComponent {
     return item.type === 'artist';
   }
 
+
   isAlbum(item: Item): item is Album {
     return item.type === 'album';
   }
 
+
   isSong(item: Item): item is Song {
     return item.type === 'song';
   }
+
 
 
   // -------------------------
@@ -95,4 +98,51 @@ export class ReviewCardComponent {
   get stars(): number[] {
     return Array(this.review?.rating || 0);
   }
+
+
+
+  // -------------------------
+  // UPDATED CHECK
+  // -------------------------
+
+  // -------------------------
+  // UPDATED CHECK
+  // -------------------------
+
+  get wasUpdated(): boolean {
+
+    if (!this.review?.createdAt || !this.review?.updatedAt) {
+      return false;
+    }
+
+    const created = new Date(this.review.createdAt).getTime();
+
+    const updated = new Date(this.review.updatedAt).getTime();
+
+    return Math.abs(updated - created) > 1000;
+
+  }
+
+
+  get displayDate(): string {
+
+    if (this.wasUpdated) {
+      return 'Updated';
+    }
+
+    return '';
+
+  }
+
+
+  get displayTime(): string {
+
+    if (this.wasUpdated) {
+      return this.review.updatedAt;
+    }
+
+    return this.review.createdAt;
+
+  }
+
 }

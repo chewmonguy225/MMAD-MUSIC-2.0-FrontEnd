@@ -1,14 +1,11 @@
 .review {
-  max-width: 800px;
   width: 100%;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #dada14;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
-
-/* ROW LAYOUT */
 .review-row {
   display: flex;
   flex-direction: row;
@@ -17,13 +14,10 @@
   padding: 16px;
 }
 
-
-/* IMAGE */
 .review-image {
   flex-shrink: 0;
   width: 150px;
   height: 150px;
-  cursor: pointer;
 }
 
 .review-image img {
@@ -38,26 +32,12 @@
   transform: scale(1.03);
 }
 
-.circle {
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.square {
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-
-/* BODY */
 .review-body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
+  align-items: flex-start;
 }
-
 
 .body-top {
   display: flex;
@@ -65,55 +45,31 @@
   align-items: flex-start;
 }
 
-
-/* ITEM TITLE */
-.review-body h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-}
-
-
-/* USERNAME */
-.review-body h2 {
-  margin: 8px 0 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #333;
-}
-
-.username {
-  cursor: pointer;
-}
-
-
-/* REVIEW CONTENT */
 .body-middle {
   display: flex;
   align-items: center;
 }
 
-
-/* HOVER */
-.review-row:hover {
-  background-color: #fafafa;
-  transition: background-color 0.2s ease;
+.item-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-
-/* CLICKABLE */
-.clickable {
-  cursor: pointer;
+.username {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.clickable:hover,
-.username:hover {
-  text-decoration: underline;
-}
-
-/* ITEM INFO (TYPE + ARTIST) */
 .item-info {
-  font-size: 0.9rem;
-  color: #666;
+  font-size: .9rem;
+  color: var(--text-secondary);
+}
+
+.review-date {
+  margin-top: 8px;
+  align-self: flex-start;
 }

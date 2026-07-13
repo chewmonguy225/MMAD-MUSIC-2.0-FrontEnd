@@ -7,13 +7,19 @@ export interface ItemPage {
 
   reviews: ItemReviewViewModel[];
 
-  // Optional depending on item type
   songs?: SimplifiedSong[];
   albums?: Album[];
+
+  albumDurationMs?: number;
+
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 export interface SimplifiedSong {
   name: string;
   sourceId: string;
   provider: MusicProvider;
+  durationMs: number;
+  artists: string[];
 }

@@ -1,63 +1,75 @@
-<!-- SEARCH BAR -->
-<div class="search-bar">
-  <input type="text" [value]="searchQuery" (input)="onSearchInput($event)" placeholder="Search..." />
+<!-- FILTERS -->
+<div class="filter-group">
 
-  <button type="button" class="clear-btn" (click)="searchQuery = ''" aria-label="Clear search input">
-    ×
+  <button type="button" (click)="toggleType('artist')" [class.active]="isTypeSelected('artist')">
+    Artists
   </button>
+
+  <button type="button" (click)="toggleType('album')" [class.active]="isTypeSelected('album')">
+    Albums
+  </button>
+
+  <button type="button" (click)="toggleType('song')" [class.active]="isTypeSelected('song')">
+    Songs
+  </button>
+
+  <button *ngIf="includeUsers" type="button" (click)="toggleType('user')" [class.active]="isTypeSelected('user')">
+    Users
+  </button>
+
 </div>
 
+
+<!-- SEARCH BAR -->
+<div class="search-bar">
+
+  <input type="text" [value]="searchQuery" (input)="onSearchInput($event)" placeholder="Search..." />
+
+  <button *ngIf="searchQuery" type="button" class="clear-btn" (click)="clearSearch()" aria-label="Clear search input">
+    ×
+  </button>
+
+</div>
+
+
 <!-- RESULTS -->
-<div *ngIf="results.length > 0">
+<div *ngIf="searchQuery && results.length > 0" class="results-container">
+
+  <div class="results-scroll">
+
+    <div class="item-list">
+
+      <ng-container *ngFor="let item of results">
+
+        <div class="result-item" (click)="selectItem(item)">
 
 
-
-  <div class="item-list">
-
-    <ng-container *ngFor="let item of displayedItems">
-
-      <div (click)="selectItem(item)">
-
-        <!-- ARTIST -->
-        <app-artist *ngIf="item.type === 'artist'" [item]="item">
-        </app-artist>
-
-        <!-- ALBUM -->
-        <app-album *ngIf="item.type === 'album'" [item]="item">
-        </app-album>
-
-        <app-song *ngIf="item.type === 'song'" [item]="item">
-        </app-song>
+          <app-item-card *ngIf="item.type !== 'user'" [item]="item" [navigateOnClick]="navigateOnItemSelect">
+          </app-item-card>
 
 
-          <!-- USER (TEMP: reuse artist component) -->
           <ng-container *ngIf="item.type === 'user' && userCache.get(item.name) as user">
-            <app-user-card [user]="user"></app-user-card>
+
+            <app-user-card [user]="user">
+            </app-user-card>
+
           </ng-container>
 
-      </div>
 
-    </ng-container>
+        </div>
 
-  </div>
+      </ng-container>
 
-
-
-  <!-- PAGINATION -->
-  <div class="pagination-controls">
-
-    <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">
-      Previous
-    </button>
-
-    <span>
-      Page {{ currentPage }} of {{ getTotalPages() }}
-    </span>
-
-    <button type="button" (click)="nextPage()" [disabled]="currentPage * itemsPerPage >= results.length">
-      Next
-    </button>
+    </div>
 
   </div>
+
+</div>
+
+
+<!-- NO RESULTS -->
+<div *ngIf="searchQuery && !isSearching && results.length === 0" class="empty-results">
+
+  No results found
 
 </div>

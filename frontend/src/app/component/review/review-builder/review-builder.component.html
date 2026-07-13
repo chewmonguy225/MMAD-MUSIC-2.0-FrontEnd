@@ -1,39 +1,186 @@
 <div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+
     <div class="modal-box" (click)="$event.stopPropagation()">
 
-        <button class="modal-close" (click)="close()">×</button>
 
-        <!-- STEP 1: SELECT ITEM (Artist for now) -->
-        <div *ngIf="step === 'search'">
-            <h2>Select an Item</h2>
+        <button class="modal-close" (click)="close()">
+            ×
+        </button>
 
-            <!-- Your search bar emits selected artist -->
-            <app-search-bar [navigateOnItemSelect]="false" (itemSelected)="selectItem($event)">
+
+        <h2>
+            {{ isEditing ? 'Update Review' : 'Create Review' }}
+        </h2>
+
+
+
+        <!-- SEARCH ITEM -->
+
+        <div *ngIf="!selectedItem">
+
+            <h3>
+                Select an Item
+            </h3>
+
+
+            <app-search-bar [navigateOnItemSelect]="false" [includeUsers]="false" (itemSelected)="selectItem($event)">
             </app-search-bar>
+
         </div>
 
-        <!-- STEP 2: RATING -->
-        <div *ngIf="step === 'rate'">
-            <h2>Rate {{ selectedItem?.name }}</h2>
 
-            <div class="stars">
-                <button *ngFor="let star of [1,2,3,4,5]" (click)="setRating(star)">
-                    ⭐ {{ star }}
-                </button>
-            </div>
+
+
+        <!-- SELECTED ITEM -->
+
+        <div *ngIf="selectedItem" class="selected-item">
+
+
+            <app-item-preview [item]="selectedItem">
+            </app-item-preview>
+
+
+
+            <button class="change-item" (click)="changeItem()">
+
+                Change Item
+
+            </button>
+
+
         </div>
 
-        <!-- STEP 3: TEXT REVIEW -->
-        <div *ngIf="step === 'text'">
-            <h2>Write your review</h2>
 
-            <textarea [(ngModel)]="text" placeholder="Write your thoughts...">
-        </textarea>
+
+
+
+        <!-- EXISTING REVIEW PROMPT -->
+
+        <div *ngIf="showUpdatePrompt" class="update-prompt">
+
+
+            <h3>
+                Review Already Exists
+            </h3>
+
+
+            <p>
+                You have already reviewed this item.
+                Would you like to update your current review?
+            </p>
+
+
 
             <div class="actions">
-                <button (click)="submit()">Submit Review</button>
+
+
+                <button class="primary" (click)="acceptUpdate()">
+
+                    Update Review
+
+                </button>
+
+
+
+                <button class="secondary" (click)="cancelUpdate()">
+
+                    Cancel
+
+                </button>
+
+
             </div>
+
+
         </div>
 
+
+
+
+
+        <!-- RATING -->
+
+        <div *ngIf="selectedItem && !showUpdatePrompt" class="rating-section">
+
+
+            <h3>
+                Rating
+            </h3>
+
+
+
+            <div class="stars">
+
+
+                <button *ngFor="let star of [1,2,3,4,5]" (click)="setRating(star)" [class.selected]="star <= rating">
+
+                    ⭐
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+        <!-- REVIEW TEXT -->
+
+        <div *ngIf="selectedItem && !showUpdatePrompt" class="text-section">
+
+
+            <h3>
+                Write your review
+            </h3>
+
+
+
+            <textarea [(ngModel)]="text" placeholder="Write your thoughts...">
+            </textarea>
+
+
+
+
+
+            <div class="actions">
+
+
+                <button (click)="submit()" [disabled]="rating === 0 || !text.trim()">
+
+
+                    {{ isEditing ? 'Update Review' : 'Submit Review' }}
+
+
+                </button>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+        <!-- ERROR -->
+
+        <p *ngIf="errorMessage" class="error-message">
+
+            {{ errorMessage }}
+
+        </p>
+
+
+
     </div>
+
 </div>

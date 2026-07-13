@@ -1,26 +1,27 @@
-<div class="review-card">
+<div class="review-card" *ngIf="review">
 
-    <!-- Header -->
-    <div class="review-header">
-      <div class="username">
-        {{ review.username }}
-      </div>
-  
-      <div class="rating">
-        <span *ngFor="let star of stars">⭐</span>
-      </div>
-    </div>
-  
-    <!-- Description -->
-    <div class="review-body">
+  <div class="review-content">
+
+    <!-- USER -->
+    <h2 class="username clickable" [routerLink]="['/profile', review.username]">
+      {{ review.username }}
+    </h2>
+
+    <!-- STARS -->
+    <span class="stars">
+      <span *ngFor="let _ of stars">⭐</span>
+    </span>
+
+    <!-- REVIEW TEXT -->
+    <div class="description">
       {{ review.description }}
     </div>
-  
-    <!-- Footer -->
-    <div class="review-footer">
-      <small class="date">
-        {{ review.createdAt | date:'mediumDate' }}
-      </small>
+
+    <!-- DATE -->
+    <div class="review-date">
+      {{ review.createdAt | date:'mediumDate' }}
     </div>
-  
+
   </div>
+
+</div>

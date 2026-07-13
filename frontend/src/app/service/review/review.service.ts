@@ -15,8 +15,8 @@ export class ReviewService {
 
   constructor(private http: HttpClient) { }
 
-  //Create
-  createReview(review: ReviewPostRequestPayload) {
+  // Create
+  createReview(review: ReviewPostRequestPayload): Observable<Review> {
     return this.http.post<Review>(
       `${this.apiUrl}/add`,
       review
@@ -24,27 +24,68 @@ export class ReviewService {
   }
 
   getReviewById(id: number): Observable<Review> {
+
     if (id <= 0) {
       throw new Error("Review ID must be positive.");
     }
-    return this.http.get<Review>(`${this.apiUrl}/find/${id}`);
+
+    return this.http.get<Review>(
+      `${this.apiUrl}/find/${id}`
+    );
   }
 
   getAllReviews(): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.apiUrl}/all`);
+
+    return this.http.get<Review[]>(
+      `${this.apiUrl}/all`
+    );
   }
 
   getFeedReviews(): Observable<Review[]> {
+
     return this.http.get<Review[]>(
       `${this.apiUrl}/feed`
     );
   }
 
   getUserReviews(username: string): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.apiUrl}/user/${username}`);
+
+    return this.http.get<Review[]>(
+      `${this.apiUrl}/user/${username}`
+    );
   }
 
   getReviewsByItemId(id: number): Observable<ItemReviewsResponse> {
-    return this.http.get<ItemReviewsResponse>(`${this.apiUrl}/item/${id}`);
+
+    return this.http.get<ItemReviewsResponse>(
+      `${this.apiUrl}/item/${id}`
+    );
   }
+
+
+  // Get a user's review for a specific item
+  getReviewByUserAndItem(
+    username: string,
+    itemId: number
+  ): Observable<Review> {
+
+    return this.http.get<Review>(
+      `${this.apiUrl}/me/item/${itemId}`
+    );
+  }
+
+  updateReview(
+    id: number,
+    review: {
+      rating: number;
+      description: string;
+    }
+  ): Observable<Review> {
+
+    return this.http.put<Review>(
+      `${this.apiUrl}/${id}`,
+      review
+    );
+  }
+
 }

@@ -32,10 +32,6 @@ export class HeaderComponent {
     );
   }
 
-  performSearch() {
-    console.log('Searching for:', this.searchQuery);
-  }
-
   openModal() {
     this.ui.openReviewBuilder();
   }

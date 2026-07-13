@@ -152,8 +152,6 @@ export class LoginComponent {
             res.username
           );
         
-          console.log(res);
-        
           this.router.navigateByUrl('home');
         
         },

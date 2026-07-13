@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { ReviewViewerComponent } from '../../review/review-viewer/review-viewer.component';
 import { ReviewService } from '../../../service/review/review.service';
@@ -8,6 +9,7 @@ import { Review } from '../../../core/model/review/review.type';
   selector: 'app-home',
   standalone: true,
   imports: [
+    CommonModule,
     ReviewViewerComponent
   ],
   templateUrl: './home-page.component.html',
@@ -16,8 +18,11 @@ import { Review } from '../../../core/model/review/review.type';
 export class HomePageComponent implements OnInit {
 
   reviews: Review[] = [];
-  cardComponent = "ReviewCardComponent";
-  isLoading = false;
+
+  cardComponent = 'ReviewCardComponent';
+
+  isLoading = true;
+
   errorMessage = '';
 
   constructor(
@@ -28,22 +33,40 @@ export class HomePageComponent implements OnInit {
     this.loadReviews();
   }
 
+
   loadReviews(): void {
+
     this.isLoading = true;
+
     this.errorMessage = '';
 
-    this.reviewService.getFeedReviews().subscribe({
-      next: (reviews: Review[]) => {
-        this.reviews = reviews ?? [];
-        this.isLoading = false;
-      },
+    setTimeout(() => {
 
-      error: (err) => {
-        console.error('Failed to load feed reviews:', err);
-        this.errorMessage = 'Failed to load reviews';
-        this.reviews = [];
-        this.isLoading = false;
-      }
-    });
+      this.reviewService.getFeedReviews()
+        .subscribe({
+
+          next: (reviews: Review[]) => {
+
+            this.reviews = reviews ?? [];
+
+            this.isLoading = false;
+
+          },
+
+          error: () => {
+
+            this.errorMessage = 'Failed to load reviews';
+
+            this.reviews = [];
+
+            this.isLoading = false;
+
+          }
+
+        });
+
+    }, 100);
+
   }
+
 }

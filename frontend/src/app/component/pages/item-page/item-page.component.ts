@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReviewViewerComponent } from '../../review/review-viewer/review-viewer.component';
+import { ItemCardComponent } from '../../item/item.component';
+import { AlbumSongsComponent } from '../../item/album-songs/album-songs/album-songs.component';
+import { ItemPageSkeletonComponent } from './item-page-skeleton/item-page-skeleton.component';
 
 import { ItemReviewViewModel } from '../../../core/model/review/ItemReviewsResponse';
 import { PageService } from '../../../service/page/page.service';
@@ -13,8 +16,6 @@ import { Album } from '../../../core/model/item/album.type';
 import { Artist } from '../../../core/model/item/artist.type';
 import { Song } from '../../../core/model/item/song.type';
 
-import { AlbumComponent } from '../../item/album/album.component';
-import { AlbumSongsComponent } from '../../item/album/album-songs/album-songs/album-songs.component';
 import { SimplifiedSong } from '../../../core/model/page/item-page.type';
 
 @Component({
@@ -23,8 +24,9 @@ import { SimplifiedSong } from '../../../core/model/page/item-page.type';
   imports: [
     CommonModule,
     ReviewViewerComponent,
-    AlbumComponent,
-    AlbumSongsComponent
+    ItemCardComponent,
+    AlbumSongsComponent,
+    ItemPageSkeletonComponent
   ],
   templateUrl: './item-page.component.html',
   styleUrls: ['./item-page.component.css']
@@ -35,24 +37,32 @@ export class ItemPageComponent implements OnInit {
 
   reviews: ItemReviewViewModel[] = [];
 
-  // Related content
   songs: SimplifiedSong[] = [];
   albums: Album[] = [];
+
+  albumDurationMs: number | null = null;
+
+  averageRating = 0;
+  reviewCount = 0;
 
   itemId: number | null = null;
 
   cardComponent = 'ItemReviewCardComponent';
 
-  isLoading = false;
+  isLoading = true;
   errorMessage = '';
+
 
   constructor(
     private route: ActivatedRoute,
     private pageService: PageService,
-    private ui: UiService
+    private ui: UiService,
+    private router: Router
   ) { }
 
+
   ngOnInit(): void {
+
     this.route.params.subscribe(params => {
 
       const id = Number(params['id']);
@@ -62,25 +72,39 @@ export class ItemPageComponent implements OnInit {
       }
 
       this.itemId = id;
+
       this.loadPage(id);
+
     });
+
   }
+
 
   loadPage(id: number): void {
 
     this.isLoading = true;
+    this.errorMessage = '';
 
     this.pageService.getItemPage(id).subscribe({
 
       next: (res) => {
-        console.log(res);
+
         this.item = res.item;
-        this.reviews = res.reviews;
+
+        this.reviews = res.reviews ?? [];
 
         this.songs = res.songs ?? [];
+
         this.albums = res.albums ?? [];
 
+        this.albumDurationMs = res.albumDurationMs ?? null;
+
+        this.averageRating = res.averageRating ?? 0;
+
+        this.reviewCount = res.reviewCount ?? 0;
+
         this.isLoading = false;
+
       },
 
       error: (err) => {
@@ -90,14 +114,27 @@ export class ItemPageComponent implements OnInit {
         this.errorMessage = 'Failed to load page';
 
         this.item = null;
+
         this.reviews = [];
+
         this.songs = [];
+
         this.albums = [];
 
+        this.albumDurationMs = null;
+
+        this.averageRating = 0;
+
+        this.reviewCount = 0;
+
         this.isLoading = false;
+
       }
+
     });
+
   }
+
 
   openReviewModal(): void {
 
@@ -106,56 +143,86 @@ export class ItemPageComponent implements OnInit {
     }
 
     this.ui.openReviewBuilder(this.item);
+
   }
 
-  // ----------------------------
-  // Type helpers
-  // ----------------------------
+
+  openArtist(artist: Artist): void {
+
+    if (!artist.id) {
+      return;
+    }
+
+    this.router.navigate([
+      '/item',
+      artist.id
+    ]);
+
+  }
+
 
   get album(): Album | null {
+
     return this.item?.type === 'album'
       ? this.item as Album
       : null;
+
   }
 
+
   get artist(): Artist | null {
+
     return this.item?.type === 'artist'
       ? this.item as Artist
       : null;
+
   }
 
+
   get song(): Song | null {
+
     return this.item?.type === 'song'
       ? this.item as Song
       : null;
+
   }
+
 
   get isAlbum(): boolean {
+
     return this.item?.type === 'album';
+
   }
+
 
   get isArtist(): boolean {
+
     return this.item?.type === 'artist';
+
   }
+
 
   get isSong(): boolean {
+
     return this.item?.type === 'song';
+
   }
 
-  get relatedTitle(): string {
 
-    if (this.isArtist) {
-      return 'Albums';
+  formatDuration(durationMs: number | null | undefined): string {
+
+    if (!durationMs) {
+      return '';
     }
 
-    if (this.isAlbum) {
-      return 'Tracks';
-    }
+    const totalSeconds = Math.floor(durationMs / 1000);
 
-    if (this.isSong) {
-      return 'More Like This';
-    }
+    const minutes = Math.floor(totalSeconds / 60);
 
-    return 'Related';
+    const seconds = totalSeconds % 60;
+
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
   }
+
 }

@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { ItemReviewViewModel } from '../../../core/model/review/ItemReviewsResponse';
 import { CommonModule } from '@angular/common';
-
+import { Router } from 'express';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-item-review-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './item-reviews-card.component.html',
   styleUrl: './item-reviews-card.component.css'
 })
