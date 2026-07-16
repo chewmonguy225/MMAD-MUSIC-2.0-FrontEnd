@@ -20,7 +20,7 @@ This is due to the hosting environment and does not reflect the application's no
 Demo:
 
 ```
-[<frontend-demo-url>](https://mmad-music-front.onrender.com/)
+https://mmad-music-front.onrender.com/
 ```
 
 ---
